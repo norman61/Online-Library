@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image:url('/static/img/index.jpg');
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: transparent;
+            backdrop-filter: blur(5px);
+            border:5px solid white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            height: 670px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: white;
+            margin-bottom:15px;
+            text-align: center;
+            -webkit-text-stroke: 1px  white;
+            font-weight:bold ;
+        }
+
+        label {
+            font-size: 16px;
+            display: block;
+            color:white;
+            -webkit-text-stroke: 1px black;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom:10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color:  rgb(24, 11, 198);
+            color: #fff;
+            border:2px solid #fff ;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"]:hover {
+            background-color: white;
+            color: rgb(24, 11, 198) ;
+            border:2px solid rgb(24, 11, 198);
+        }
+
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .flash-message.error {
+            background-color: #dc3545;
+        }
+
+        .flash-message.success {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class = "container">
+        <h1>Registration Form</h1>
+    <form action="/signin" method="post">
+        <label for="id">ID NUMBER</label><br>
+        <input type="text" name="id" required><br>
+
+        <label for="name">NAME</label><br>
+        <input type="text" name="name" required><br>
+
+        <label for="course">COURSE</label><br>
+        <input type="text" name="course" required><br>
+
+        <label for="year">YEAR LEVEL</label><br>
+        <select name="year" id="year" required>
+            <option value="">--SELECT--</option>
+            <option value="First Year">1st Year</option>
+            <option value="Second Year">2nd Year</option>
+            <option value="Third Year">3rd Year</option>
+            <option value="Fourth Year">4th Year</option>
+        </select><br>
+
+        <label for="email">EMAIL</label><br>
+        <input type="email" name="email" required><br>
+
+        <label for="password">PASSWORD</label><br>
+        <input type="password" name="password" required><br>
+
+        <label for="repassword">RETYPE PASSWORD</label><br>
+        <input type="password" name="repassword" required><br>
+
+        <input type="submit" value="REGISTER">
+    </form>
+    
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    </div>
+</body>
+</html>

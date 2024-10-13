@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color:rgb(24, 11, 198);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li{
+            display: inline;
+            margin: 0 10px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .welcome {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .section-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .borrow, .available-books {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid rgb(24, 11, 198);
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: rgb(24, 11, 198) ;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            border:2px solid white;
+
+        }
+        input[type="submit"]:hover {
+            background-color: white;
+            color: rgb(24, 11, 198) ;
+            border:2px solid rgb(24, 11, 198);
+        }
+        .available-books ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .available-books ul li {
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .available-books ul li img {
+            width: 50px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>WELCOME TO THE ONLINE LIBRARY</h1>
+        <nav>
+            <ul>
+                <li><a href="{{url_for('profile')}}">Profile</a></li>
+                <li><a href="{{url_for('notifications')}}">Details</a></li>
+                <li><a href="{{url_for('logout')}}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <h2>Hello, {{user[0]}}!</h2>
+            <p>Welcome to your dashboard. Here you can manage your profile, check notifications, and borrow books.</p>
+        </section>
+
+        <div class="section-container">
+            <section class="borrow">
+                <h2>Borrow Books</h2>
+                <form action="/home" method="post">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" required>
+                    
+                    <label for="title">BOOK TITLE</label>
+                    <input type="text" name="title" id="title" required>
+
+                    <label for="author">Author</label>
+                    <input type="text" name="author" id="author" required>
+
+                    <label for="bdate">BORROW DATE</label>
+                    <input type="date" name="bdate" id="bdate" required>
+
+                    <label for="rdate">RETURN DATE</label>
+                    <input type="date" name="rdate" id="rdate" required>
+
+                    <input type="submit" value="BORROW">
+                </form>
+            </section>
+
+            <section class="available-books">
+                <h2>Available Books</h2>
+                <ul>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/book1.png') }}" alt="Book 1">
+                        <span>The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win (Hardcover) by Gene Kim</span>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/book2.jpg') }}" alt="Book 2">
+                        <span>The Pragmatic Programmer: From Journeyman to Master (Paperback) by Andy Hunt</span>
+                    </li>
+                    <li>
+                        <img src="{{ url_for('static', filename='img/book3.jpg') }}" alt="Book 3">
+                        <span>The Mythical Man-Month: Essays on Software Engineering (Paperback)by Frederick P. Brooks Jr.</span>
+                    </li>
+                    
+                </ul>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

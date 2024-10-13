@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/static/img/index.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgb(24, 11, 198);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: rgb(24, 11, 198);
+            margin: 10px 0;
+        }
+
+        p {
+            font-size: 18px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        strong {
+            color: #333;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border 0.3s;
+        }
+
+        button.update {
+            background-color: rgb(24, 11, 198);
+            color: white;
+            border: 2px solid rgb(24, 11, 198)
+        }
+
+        button.update:hover {
+            background-color: white;
+            color: rgb(24, 11, 198);
+            border: 2px solid rgb(24, 11, 198);
+        }
+
+        button.logout {
+            background-color: #f44336;
+            color: white;
+            border: 2px solid #f44336;
+        }
+
+        button.logout:hover {
+            background-color: white;
+            color: #f44336;
+            border: 2px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+
+        <h2>{{ user['name'] }}</h2>
+        <p><strong>ID:</strong> {{ user['id'] }}</p>
+        <p><strong>Course:</strong> {{ user['course'] }}</p>
+        <p><strong>Year:</strong> {{ user['year'] }}</p>
+        <p><strong>Email:</strong> {{ user['email'] }}</p>
+
+        <div class="button-container">
+            <a href="/update_profile"><button class="update">Update Profile</button></a>
+            <a href="/logout"><button class="logout">Log Out</button></a>
+        </div>
+    </div>
+</body>
+</html>
