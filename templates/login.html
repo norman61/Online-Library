@@ -19,9 +19,9 @@
         }
 
         .container {
-            background-color: transparent;
+            background-color:transparent;
             backdrop-filter: blur(5px);
-            border:5px solid white;
+            border: none;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 100%;
@@ -32,7 +32,7 @@
 
         h1 {
             font-size: 24px;
-            color:rgb(24, 11, 198) ;
+            color: white;
             margin-bottom:15px;
             text-align: center;
             -webkit-text-stroke: 1px  rgb(24, 11, 198);
@@ -54,7 +54,7 @@
             width: 100%;
             padding: 10px 15px;
             margin-bottom:10px;
-            border: 1px solid #ddd;
+            border: 1px solid #ddd; 
             border-radius: 4px;
             box-sizing: border-box;
 
@@ -63,12 +63,12 @@
         input[type="email"],
         input[type="password"],
         select:hover{
-            border:3px solid rgb(24, 11, 198);
+            border:3px transparent;
 
         }
 
         input[type="submit"] {
-            background-color:  rgb(24, 11, 198);
+            background-color:orangered;
             color: #fff;
             border:2px solid #fff ;
             border-radius: 4px;
@@ -81,8 +81,8 @@
 
         input[type="submit"]:hover {
             background-color: white;
-            color: rgb(24, 11, 198) ;
-            border:2px solid rgb(24, 11, 198);
+            color: orangered ;
+            border:2px solid orangered;
         }
 
         .flash-message {
@@ -96,27 +96,32 @@
         .flash-message.error {
             background-color: #dc3545;
         }
+        .link {
+            display: flex;
+            margin-left: 17%;
+            margin-top: 6%;
+            color: white;
+            font-size: medium;
+            -webkit-text-stroke: .5px  rgb(209, 209, 219);
+            
+        }
 
     </style>
 </head>
 <body>
     <div class = "container">
-        <h1>LOGIN</h1>
-    <form action="/login" method="post">
-        
-        <label for="email">PHINMAED EMAIL</label><br>
-        <input type="email" name="email" autocomplete="off" required><br>
+        <h1>Join us Today</h1>
+        <form action="/login" method="post">
 
-        <label for="password" autocomplete="off">PASSWORD</label><br>
-        <input type="password" name="password" required><br>
+            <label for="email">ID Number or Email</label><br>
+            <input type="email" name="email" autocomplete="off" required><br>   
 
-       
-       
+            <label for="password" autocomplete="off">PASSWORD</label><br>
+            <input type="password" name="password" required><br><br>
 
-
-        <input type="submit" value="LOGIN">
-    </form>
-
+            <input type="submit" value="LOGIN">
+        </form>
+        <a class="link" href="/signin">Need an account? Create one!</a>
     </div>
 </body>
 </html>
