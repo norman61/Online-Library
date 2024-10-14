@@ -15,6 +15,7 @@ class LibraryApp:
 
     def _setup_routes(self):
         self.app.add_url_rule('/', 'index', self.index)
+        self.app.add_url_rule('/', 'index2', self.index2)
         self.app.add_url_rule('/signin', 'signin', self.signin, methods=['GET', 'POST'])
         self.app.add_url_rule('/login', 'login', self.login, methods=['GET', 'POST'])
         self.app.add_url_rule('/admin_index', 'admin_index', self.admin_index, methods=['GET', 'POST'])
@@ -27,6 +28,9 @@ class LibraryApp:
 
     def index(self):
         return render_template("index.html")
+    
+    def index2(self):
+        return render_template("index2.html")
 
     def signin(self):
         if request.method == "POST":
@@ -62,7 +66,7 @@ class LibraryApp:
 
             # Insert data into user table
             cursor = self.mysql.connection.cursor()
-            cursor.execute('INSERT INTO users (Id, Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s, %s)',
+            cursor.execute('INSERT INTO users (ID, Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s, %s)',
                            (id, name, course, year, email, password))
 
             self.mysql.connection.commit()
@@ -79,7 +83,7 @@ class LibraryApp:
             password = request.form['password']
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute("SELECT Id FROM users WHERE Email = %s AND Password = %s", (email, password))
+            cursor.execute("SELECT ID FROM users WHERE Email = %s AND Password = %s", (email, password))
             user = cursor.fetchone()
             cursor.close()
 
@@ -104,7 +108,7 @@ class LibraryApp:
     def home(self):
         user_id = session.get('id')
         cursor = self.mysql.connection.cursor()
-        cursor.execute("SELECT Name FROM users WHERE Id = %s", (user_id,))
+        cursor.execute("SELECT Name FROM users WHERE ID = %s", (user_id,))
         user = cursor.fetchone()
         cursor.close()
 
@@ -116,7 +120,7 @@ class LibraryApp:
             rdate = request.form["rdate"]
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute('INSERT INTO books (Name, Title, Author, Borrow_Date, Return_Date, Id) VALUES (%s, %s, %s, %s, %s, %s)',
+            cursor.execute('INSERT INTO books (Name, Title, Author, Borrow_Date, Return_Date, ID) VALUES (%s, %s, %s, %s, %s, %s)',
                            (name, title, author, bdate, rdate, user_id))
             self.mysql.connection.commit()
             cursor.close()
@@ -151,7 +155,7 @@ class LibraryApp:
             return redirect(url_for('login'))
 
         cursor = self.mysql.connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE Id = %s", (user_id,))
+        cursor.execute("SELECT * FROM users WHERE ID = %s", (user_id,))
         user = cursor.fetchone()
         cursor.close()
 
@@ -176,7 +180,7 @@ class LibraryApp:
             return redirect(url_for('login'))
 
         cursor = self.mysql.connection.cursor()
-        cursor.execute("SELECT Id, Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
+        cursor.execute("Select ID, Name, Course, Year, Email FROM users WHERE ID = %s", (user_id,))
         user = cursor.fetchone()
 
         if request.method == 'POST':

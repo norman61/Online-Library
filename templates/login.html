@@ -8,9 +8,9 @@
        
         body {
             font-family: Arial, sans-serif;
-            background-image:url('/static/img/index.jpg');
-            background-repeat: no-repeat;
+            background-image:url('/static/img/homepage bg.jpg');
             background-size: cover;
+            background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,32 +19,28 @@
         }
 
         .container {
-            background-color:transparent;
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.4);
             border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 100%;
-            max-width: 400px;
+            padding: 25px;
+            width: 350px;
             box-sizing: border-box;
-            height: auto;
         }
 
         h1 {
             font-size: 24px;
-            color: white;
-            margin-bottom:15px;
+            color: #fff;
+            margin-bottom: 25px;
             text-align: center;
-            -webkit-text-stroke: 1px  rgb(24, 11, 198);
-            font-weight:bold ;
         }
 
         label {
-            font-size: 16px;
-            display: block;
-            color:white;
-            -webkit-text-stroke: 1px black;
+            width: 100%;
+            padding: 10px;
+            display: inline-block;
+            font-size: 13px;
             font-weight: bold;
+            color:white;
+
         }
 
         input[type="text"],
@@ -52,37 +48,26 @@
         input[type="password"],
         select {
             width: 100%;
-            padding: 10px 15px;
+            padding: 10px;
             margin-bottom:10px;
-            border: 1px solid #ddd; 
-            border-radius: 4px;
+            border: none;
             box-sizing: border-box;
-
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        select:hover{
-            border:3px transparent;
 
         }
 
         input[type="submit"] {
-            background-color:orangered;
+            background-color: transparent;
             color: #fff;
-            border:2px solid #fff ;
-            border-radius: 4px;
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
+            border:1px solid;
+            padding: 10px;
+            font-size: 15px;
+            width: 50%;
+            margin-left: 25%;
             box-sizing: border-box;
         }
 
         input[type="submit"]:hover {
-            background-color: white;
-            color: orangered ;
-            border:2px solid orangered;
+            background-color: #d76908;
         }
 
         .flash-message {
@@ -96,13 +81,14 @@
         .flash-message.error {
             background-color: #dc3545;
         }
+
         .link {
-            display: flex;
+            display: block;
             margin-left: 17%;
-            margin-top: 6%;
-            color: white;
-            font-size: medium;
-            -webkit-text-stroke: .5px  rgb(209, 209, 219);
+            margin-top: 50px;
+            margin-bottom: 0;
+            color: #fff;
+            font-size: 15px;
             
         }
 
@@ -110,13 +96,13 @@
 </head>
 <body>
     <div class = "container">
-        <h1>Join us Today</h1>
+        <h1>Join Us Today!</h1>
         <form action="/login" method="post">
 
             <label for="email">ID Number or Email</label><br>
             <input type="email" name="email" autocomplete="off" required><br>   
 
-            <label for="password" autocomplete="off">PASSWORD</label><br>
+            <label for="password" autocomplete="off">Password</label><br>
             <input type="password" name="password" required><br><br>
 
             <input type="submit" value="LOGIN">
