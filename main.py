@@ -30,7 +30,7 @@ class LibraryApp:
         return render_template("index.html")
     
     def index2(self):
-        return render_template("index2.html")
+        return redirect(url_for("index2.html"))
 
     def signin(self):
         if request.method == "POST":
