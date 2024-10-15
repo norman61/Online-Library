@@ -15,7 +15,6 @@ class LibraryApp:
 
     def _setup_routes(self):
         self.app.add_url_rule('/', 'index', self.index)
-        self.app.add_url_rule('/', 'index2', self.index2)
         self.app.add_url_rule('/signin', 'signin', self.signin, methods=['GET', 'POST'])
         self.app.add_url_rule('/login', 'login', self.login, methods=['GET', 'POST'])
         self.app.add_url_rule('/admin_index', 'admin_index', self.admin_index, methods=['GET', 'POST'])
@@ -28,9 +27,6 @@ class LibraryApp:
 
     def index(self):
         return render_template("index.html")
-    
-    def index2(self):
-        return redirect(url_for("index2.html"))
 
     def signin(self):
         if request.method == "POST":
@@ -43,7 +39,7 @@ class LibraryApp:
             repassword = request.form['repassword']
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute('SELECT COUNT(*) FROM users WHERE Id = %s', (id,))
+            cursor.execute('SELECT COUNT(*) FROM users WHERE ID = %s', (id,))
             id_count = cursor.fetchone()[0]
 
             if id_count > 0:
