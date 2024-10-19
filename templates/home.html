@@ -8,7 +8,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-image:url('/static/img/homepage bg.jpg');
+            background-color: darkgray;
             background-position: center;
             background-size: cover;
             margin: 0;
@@ -17,14 +17,13 @@
         }
 
         header {
-            background-color: #d76908(24, 11, 198);
-            padding: 0px;
-            text-align: center;
+            background-color: #ca7c38;
+            border-radius: 4px;
+            padding: 5px;
         }
 
         nav ul {
             list-style-type: none;
-            background-color: transparent;
             padding: 0;
         }
 
@@ -36,7 +35,8 @@
         nav ul li a {
             color: white;
             font-family: Arial, sans-serif;
-            font-weight: normal;
+            font-weight: bold;
+            padding: 0%;
         }
 
         main {
@@ -46,7 +46,7 @@
         }
 
         .welcome {
-            background-color:white;
+            background-color:whitesmoke;
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 5px;
@@ -134,8 +134,10 @@
     <header>
         <nav>
             <ul>
+                <li><a href="{{url_for('home')}}">Home</a></li>
                 <li><a href="{{url_for('profile')}}">Profile</a></li>
-                <li><a href="{{url_for('notifications')}}">Details</a></li>
+                <li><a href="{{url_for('notifications')}}">Books</a></li>
+                <li><a href="{{url_for('logout')}}"></a></li>
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
             </ul>
         </nav>

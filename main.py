@@ -206,6 +206,9 @@ class LibraryApp:
     def logout(self):
         session.clear()  
         return redirect(url_for('index'))
+    
+    def home_one(self):
+        return render_template('home1.html')
 
     def run(self):
         self.app.run(debug=True)
