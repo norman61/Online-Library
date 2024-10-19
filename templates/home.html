@@ -5,63 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <style>
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-image:url('/static/img/homepage bg.jpg');
+            background-position: center;
+            background-size: cover;
             margin: 0;
             padding: 0;
+            border: none;
         }
+
         header {
-            background-color: orangered(24, 11, 198);
-            color: white;
-            padding: 20px;
+            background-color: #d76908(24, 11, 198);
+            padding: 0px;
             text-align: center;
         }
+
         nav ul {
             list-style-type: none;
+            background-color: transparent;
             padding: 0;
         }
+
         nav ul li{
             display: inline;
             margin: 0 10px;
         }
+
         nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
+            color: #d76908;
+            font-family: Arial, sans-serif;
+            font-weight: normal;
         }
+
         main {
             padding: 20px;
             max-width: 1200px;
             margin: auto;
         }
+
         .welcome {
-            background-color: white;
+            background-color:white;
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .section-container {
             display: flex;
             justify-content: space-between;
             gap: 20px;
         }
+
         .borrow, .available-books {
             flex: 1;
-            background-color: white;
+            background-color: whitesmoke;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         h2 {
             color: #333;
         }
+
         label {
             display: block;
             margin-top: 10px;
             font-weight: bold;
         }
+
         input[type="text"], input[type="date"] {
             width: 100%;
             padding: 10px;
@@ -70,6 +85,7 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+
         input[type="submit"] {
             background-color: orangered(198, 114, 11) ;
             color: white;
@@ -81,15 +97,18 @@
             border:2px solid white;
 
         }
+
         input[type="submit"]:hover {
             background-color: white;
             color: orangered(24, 11, 198) ;
             border:2px solid orangered(24, 11, 198);
         }
+
         .available-books ul {
             list-style-type: none;
             padding: 0;
         }
+
         .available-books ul li {
             background-color: #f9f9f9;
             margin: 10px 0;
@@ -100,6 +119,7 @@
             align-items: center;
             gap: 10px;
         }
+        
         .available-books ul li img {
             width: 50px;
             height: 75px;
@@ -107,6 +127,7 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+
     </style>
 </head>
 <body>
