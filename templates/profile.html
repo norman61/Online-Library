@@ -22,12 +22,12 @@
             backdrop-filter: blur(10px);
             border: 2px solid #ddd;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 20px;
+            padding: 10px;
             width: 90%;
             max-width: 500px;
             border-radius: 10px;
             box-sizing: border-box;
-            text-align: center;
+            text-align: left;
         }
 
         h1 {
@@ -36,6 +36,7 @@
             margin-bottom: 20px;
             font-weight: bold;
             text-transform: uppercase;
+            text-align: left;
             border-bottom: 2px solid rgb(24, 11, 198);
             padding-bottom: 10px;
         }
@@ -86,26 +87,33 @@
             background-color: #f44336;
             color: white;
             border: 2px solid #f44336;
+        
         }
-
         button.logout:hover {
             background-color: white;
             color: #f44336;
             border: 2px solid #f44336;
         }
+        
+        
+
+
     </style>
 </head>
 <body>
+    
     <div class="container">
+        <button onclick="history.back()">Go Back</button>
         <h1>User Profile</h1>
-
+        
         <h2>{{ user['name'] }}</h2>
+        
         <p><strong>ID:</strong> {{ user['id'] }}</p>
         <p><strong>Course:</strong> {{ user['course'] }}</p>
         <p><strong>Year:</strong> {{ user['year'] }}</p>
         <p><strong>Email:</strong> {{ user['email'] }}</p>
 
-        <div class="button-container">
+        
             <a href="/update_profile"><button class="update">Update Profile</button></a>
             <a href="/logout"><button class="logout">Log Out</button></a>
         </div>

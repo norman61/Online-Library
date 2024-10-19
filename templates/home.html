@@ -112,11 +112,13 @@
 <body>
     <header>
         <h1>WELCOME TO THE ONLINE LIBRARY</h1>
+        
         <nav>
             <ul>
                 <li><a href="{{url_for('profile')}}">Profile</a></li>
                 <li><a href="{{url_for('notifications')}}">Details</a></li>
                 <li><a href="{{url_for('logout')}}">Logout</a></li>
+                <button onclick="history.back()">Go Back</button>
             </ul>
         </nav>
     </header>
