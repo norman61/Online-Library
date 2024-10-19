@@ -59,7 +59,7 @@
         }
 
         input[type="submit"] {
-            background-color:  rgb(24, 11, 198);
+            background-color:  orangered;
             color: #fff;
             border:2px solid #fff ;
             border-radius: 4px;
@@ -72,8 +72,8 @@
 
         input[type="submit"]:hover {
             background-color: white;
-            color: rgb(24, 11, 198) ;
-            border:2px solid rgb(24, 11, 198);
+            color: orangered(24, 11, 198) ;
+            border:2px solid orangered(24, 11, 198);
         }
 
         .flash-message {
@@ -82,6 +82,7 @@
             border-radius: 4px;
             color: #fff;
             text-align: center;
+
         }
 
         .flash-message.error {
@@ -97,16 +98,16 @@
     <div class = "container">
         <h1>Registration Form</h1>
     <form action="/signin" method="post">
-        <label for="id">ID NUMBER</label><br>
+        <label for="id">ID Number</label><br>
         <input type="text" name="id" required><br>
 
-        <label for="name">NAME</label><br>
+        <label for="name">Name</label><br>
         <input type="text" name="name" required><br>
 
-        <label for="course">COURSE</label><br>
+        <label for="course">Course</label><br>
         <input type="text" name="course" required><br>
 
-        <label for="year">YEAR LEVEL</label><br>
+        <label for="year">Year Level</label><br>
         <select name="year" id="year" required>
             <option value="">--SELECT--</option>
             <option value="First Year">1st Year</option>
@@ -115,13 +116,13 @@
             <option value="Fourth Year">4th Year</option>
         </select><br>
 
-        <label for="email">EMAIL</label><br>
+        <label for="email">Email</label><br>
         <input type="email" name="email" required><br>
 
-        <label for="password">PASSWORD</label><br>
+        <label for="password">Password</label><br>
         <input type="password" name="password" required><br>
 
-        <label for="repassword">RETYPE PASSWORD</label><br>
+        <label for="repassword">Confirm Password</label><br>
         <input type="password" name="repassword" required><br>
 
         <input type="submit" value="REGISTER">

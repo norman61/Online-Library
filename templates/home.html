@@ -12,7 +12,7 @@
             padding: 0;
         }
         header {
-            background-color:rgb(24, 11, 198);
+            background-color: orangered(24, 11, 198);
             color: white;
             padding: 20px;
             text-align: center;
@@ -66,12 +66,12 @@
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border: 1px solid rgb(24, 11, 198);
+            border: 1px solid orangered(24, 11, 198);
             border-radius: 5px;
             box-sizing: border-box;
         }
         input[type="submit"] {
-            background-color: rgb(24, 11, 198) ;
+            background-color: orangered(198, 114, 11) ;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -83,8 +83,8 @@
         }
         input[type="submit"]:hover {
             background-color: white;
-            color: rgb(24, 11, 198) ;
-            border:2px solid rgb(24, 11, 198);
+            color: orangered(24, 11, 198) ;
+            border:2px solid orangered(24, 11, 198);
         }
         .available-books ul {
             list-style-type: none;
@@ -111,8 +111,11 @@
 </head>
 <body>
     <header>
+<<<<<<< HEAD
         <h1>WELCOME TO THE ONLINE LIBRARY</h1>
         
+=======
+>>>>>>> 8e91983055500304e268c930e5e1cf5981499313
         <nav>
             <ul>
                 <li><a href="{{url_for('profile')}}">Profile</a></li>
@@ -136,16 +139,16 @@
                     <label for="name">Name</label>
                     <input type="text" name="name" required>
                     
-                    <label for="title">BOOK TITLE</label>
+                    <label for="title">Book Title</label>
                     <input type="text" name="title" id="title" required>
 
                     <label for="author">Author</label>
                     <input type="text" name="author" id="author" required>
 
-                    <label for="bdate">BORROW DATE</label>
+                    <label for="bdate">Borrow Date</label>
                     <input type="date" name="bdate" id="bdate" required>
 
-                    <label for="rdate">RETURN DATE</label>
+                    <label for="rdate">Return Date</label>
                     <input type="date" name="rdate" id="rdate" required>
 
                     <input type="submit" value="BORROW">

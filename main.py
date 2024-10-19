@@ -41,7 +41,7 @@ class LibraryApp:
             repassword = request.form['repassword']
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute('SELECT COUNT(*) FROM users WHERE Id = %s', (id,))
+            cursor.execute('SELECT COUNT(*) FROM users WHERE ID = %s', (id,))
             id_count = cursor.fetchone()[0]
 
             if id_count > 0:
@@ -63,7 +63,7 @@ class LibraryApp:
                 return redirect(url_for('signin'))
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute('INSERT INTO users (Id, Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s, %s)',
+            cursor.execute('INSERT INTO users (ID, Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s, %s)',
                            (id, name, course, year, email, password))
             self.mysql.connection.commit()
             cursor.close()
@@ -80,7 +80,7 @@ class LibraryApp:
             password = request.form['password']
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute("SELECT Id FROM users WHERE Email = %s AND Password = %s", (email, password))
+            cursor.execute("SELECT ID FROM users WHERE Email = %s AND Password = %s", (email, password))
             user = cursor.fetchone()
             cursor.close()
 
@@ -121,7 +121,7 @@ class LibraryApp:
     def home(self):
         user_id = session.get('id')
         cursor = self.mysql.connection.cursor()
-        cursor.execute("SELECT Name FROM users WHERE Id = %s", (user_id,))
+        cursor.execute("SELECT Name FROM users WHERE ID = %s", (user_id,))
         user = cursor.fetchone()
         cursor.close()
 
@@ -133,7 +133,7 @@ class LibraryApp:
             rdate = request.form["rdate"]
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute('INSERT INTO books (Name, Title, Author, Borrow_Date, Return_Date, Id) VALUES (%s, %s, %s, %s, %s, %s)',
+            cursor.execute('INSERT INTO books (Name, Title, Author, Borrow_Date, Return_Date, ID) VALUES (%s, %s, %s, %s, %s, %s)',
                            (name, title, author, bdate, rdate, user_id))
             self.mysql.connection.commit()
             cursor.close()
@@ -167,7 +167,7 @@ class LibraryApp:
             return redirect(url_for('login'))
 
         cursor = self.mysql.connection.cursor()
-        cursor.execute("SELECT * FROM users WHERE Id = %s", (user_id,))
+        cursor.execute("SELECT * FROM users WHERE ID = %s", (user_id,))
         user = cursor.fetchone()
         cursor.close()
 
@@ -191,7 +191,7 @@ class LibraryApp:
             return redirect(url_for('login'))
 
         cursor = self.mysql.connection.cursor()
-        cursor.execute("SELECT Id, Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
+        cursor.execute("Select ID, Name, Course, Year, Email FROM users WHERE ID = %s", (user_id,))
         user = cursor.fetchone()
 
         if request.method == 'POST':
