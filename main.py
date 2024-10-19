@@ -218,6 +218,6 @@ class LibraryApp:
     def run(self):
         self.app.run(debug=True)
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     library_app = LibraryApp()
     library_app.run()

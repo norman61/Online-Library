@@ -10,47 +10,48 @@
             font-family: Arial, sans-serif;
             background-color: darkgray;
             background-position: center;
-            background-size: cover;
-            margin: 0;
-            padding: 0;
             border: none;
         }
 
         header {
             background-color: #ca7c38;
             border-radius: 4px;
-            padding: 5px;
+            padding-bottom: 4px;
+            padding-left: 20px;
+
         }
 
-        nav ul {
-            list-style-type: none;
+        nav ul { 
             padding: 0;
         }
 
-        nav ul li{
+        nav ul li {
             display: inline;
-            margin: 0 10px;
         }
 
         nav ul li a {
             color: white;
             font-family: Arial, sans-serif;
             font-weight: bold;
-            padding: 0%;
+        }
+
+        nav ul h2 {
+            position: relative;
+            right: -80%;
+            top: -50px;
+        }
+
+        nav ul p {
+            position: relative;
+            right: -80%;
+            top: -50px;
         }
 
         main {
             padding: 20px;
             max-width: 1200px;
             margin: auto;
-        }
 
-        .welcome {
-            background-color:whitesmoke;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .section-container {
@@ -132,29 +133,18 @@
 </head>
 <body>
     <header>
-<<<<<<< HEAD
-        <h1>WELCOME TO THE ONLINE LIBRARY</h1>
-        
-=======
->>>>>>> 8e91983055500304e268c930e5e1cf5981499313
         <nav>
             <ul>
-                <li><a href="{{url_for('home')}}">Home</a></li>
                 <li><a href="{{url_for('profile')}}">Profile</a></li>
-                <li><a href="{{url_for('notifications')}}">Books</a></li>
-                <li><a href="{{url_for('logout')}}"></a></li>
-                <li><a href="{{url_for('logout')}}">Logout</a></li>
-                <button onclick="history.back()">Go Back</button>
+                <li><a href="{{url_for('notifications')}}">Borrowed Books</a></li>
+                <li><a href="{{url_for('logout')}}">Log Out</a></li>
+                <h2>Hello, {{user[0]}}!</h2>
+                <p>Welcome to your dashboard.</p>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="welcome">
-            <h2>Hello, {{user[0]}}!</h2>
-            <p>Welcome to your dashboard. Here you can manage your profile, check notifications, and borrow books.</p>
-        </section>
-
         <div class="section-container">
             <section class="borrow">
                 <h2>Borrow Books</h2>
@@ -182,7 +172,7 @@
                 <h2>Available Books</h2>
                 <ul>
                     <li>
-                        <img src="{{ url_for('static', filename='img/book1.png') }}" alt="Book 1">
+                        <a href="{{url_for('profile')}}"><img src="{{ url_for('static', filename='img/book1.png') }}" alt="Book 1"></a>
                         <span>The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win (Hardcover) by Gene Kim</span>
                     </li>
                     <li>
