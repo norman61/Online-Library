@@ -19,6 +19,14 @@ class LibraryApp:
         @self.app.route("/")
         def index():
             return render_template("index.html")
+        
+        @self.app.route("/about")
+        def about():
+            return render_template('about.html')
+
+        @self.app.route("/contact")
+        def contact():
+            return render_template('contact.html')
 
         @self.app.route("/signin", methods=['GET', 'POST'])
         def signin():

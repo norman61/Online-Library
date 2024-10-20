@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <style>
-
         body {
-            background-image:url('/static/img/homepage bg.jpg');
+            background-image: url('/static/img/homepage bg.jpg');
             background-size: cover;
             background-position: center;
             text-align: center;
             font-family: Tahoma, sans-serif;
             display: flex;
+            flex-direction: column; /* Change to column for footer placement */
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -25,7 +25,6 @@
             padding: 70px;
             font-weight: normal;
             text-align: center;
-        
         }
 
         .container h1 {
@@ -35,7 +34,6 @@
             font-family: Impact;
             letter-spacing: 11px;
             margin: 60px;
-    
         }
 
         .container p {
@@ -44,41 +42,62 @@
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             font-weight: lighter;
             margin: 20px 0;
-            
         }
 
         button {
             background-color: transparent;
             color: #fff;
-            border:1px solid;
+            text-decoration: none; 
+            border: 1px solid #fff;
+            border-radius: 5px; 
             padding: 10px;
-            font-size: 17px;
-            font-family: Tahoma;
-            font-weight: lighter;
-            width: 13%;
+            width: 12%;
             margin-top: 40px;
             margin-right: 10px;
-            box-sizing: border-box;
-            
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
             background-color: #d76908;
-            
         }
-      
-    </style>
 
+        footer {
+            margin-top: auto;
+            padding: 20px 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 100%;
+        }
+
+        .footer-buttons {
+            text-align: center;
+        }
+
+        .footer-buttons a {
+            color: #fff;
+            text-decoration: none; 
+            padding: 10px 20px;
+            border: 1px solid #fff; 
+            border-radius: 5px; 
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer-buttons a:hover {
+            background-color: #d76908;
+        }
+    </style>
 </head>
 <body>
-    
-    <div class = "container">
-        <h1>WELCOME TO THE <span style="color: #d76908;;">LIBRARY</span></h1>
-        <p>Explore and Borrow <br>
-            new Books</p>
-    
+    <div class="container">
+        <h1>WELCOME TO THE <span style="color: #d76908;">LIBRARY</span></h1>
+        <p>Explore and Borrow <br> new Books</p>
         <a href="/login"><button>GET STARTED</button></a>
-
     </div>
+    <footer>
+        <div class="footer-buttons">
+            <a href="{{ url_for('about') }}" class="button">About Us</a>
+            <a href="{{ url_for('contact') }}" class="button">Contact Us</a>
+        </div>
+    </footer>
 </body>
 </html>
