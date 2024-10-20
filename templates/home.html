@@ -7,44 +7,83 @@
     <style>
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: darkgray;
+            background-image:url('/static/img/homepage bg.jpg');
+            background-size: cover;
             background-position: center;
-            border: none;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        header {
-            background-color: #ca7c38;
-            border-radius: 4px;
-            padding-bottom: 4px;
-            padding-left: 20px;
-
+        header{
+            width: 100%;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgb(190, 107, 11);
+            box-shadow: 0 4px 8px 0 rgba(94, 87, 87, 0.2);
+            z-index: 1000;
+            border-radius: 3px;
         }
 
-        nav ul { 
+        header ul .caption{
+            margin-left: 15px;
+            font-size: 25px;
+            color: black;
+            position: relative;
+            left: 60%;
+            top: 10px;
+        }
+
+        header .main-menu{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style-type: none;
+        }
+
+        header .main-menu .buts{
+            margin:0px  10px;
+            position: relative;
+            right: 11px;
+        }
+
+        nav {
+            list-style: none;
+            margin: 0;
             padding: 0;
         }
 
-        nav ul li {
-            display: inline;
-        }
 
-        nav ul li a {
+        nav a {
+            text-decoration: none;
+            color: rgb(19, 16, 16);
+            border-radius: 8px;
+            background: var(--mainBlue);
+            padding: .6rem 1rem;
+            cursor: pointer;
+            box-shadow: 0 0px 4px 0px rgb(0, 30, 58);
+        }   
+
+        nav a:hover {
             color: white;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
         }
 
-        nav ul h2 {
-            position: relative;
-            right: -80%;
-            top: -50px;
+        .logo-main .caption p{
+            font-size: 20px;
         }
 
-        nav ul p {
+        nav ul .butss { 
             position: relative;
-            right: -80%;
-            top: -50px;
+            right: -120%;
         }
 
         main {
@@ -57,25 +96,28 @@
         .section-container {
             display: flex;
             justify-content: space-between;
-            gap: 20px;
+            gap: 40px;
+            position: relative;
+            top: 70px;
         }
 
         .borrow, .available-books {
             flex: 1;
-            background-color: whitesmoke;
+            background: rgba(0, 0, 0, 0.4);
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: #333;
+            color: white;
         }
 
         label {
             display: block;
             margin-top: 10px;
             font-weight: bold;
+            color: #f9f9f9;
         }
 
         input[type="text"], input[type="date"] {
@@ -85,6 +127,7 @@
             border: 1px solid orangered(24, 11, 198);
             border-radius: 5px;
             box-sizing: border-box;
+            border: none;
         }
 
         input[type="submit"] {
@@ -95,7 +138,7 @@
             border-radius: 5px;
             cursor: pointer;
             margin-top: 10px;
-            border:2px solid white;
+            border:2px rgba(0, 0, 0, 0.4);
 
         }
 
@@ -134,14 +177,15 @@
 <body>
     <header>
         <nav>
-            <ul>
-                <li><a href="{{url_for('profile')}}">Profile</a></li>
-                <li><a href="{{url_for('notifications')}}">Borrowed Books</a></li>
-                <li><a href="{{url_for('logout')}}">Log Out</a></li>
-                <h2>Hello, {{user[0]}}!</h2>
-                <p>Welcome to your dashboard.</p>
+            <ul class="main-menu">
+                <li class="buts"><a href="{{url_for('profile')}}">Profile</a></li>
+                <li class="buts"><a href="{{url_for('notifications')}}">Borrowed Transactions</a></li>
+                <li class="butss"><a href="{{url_for('logout')}}">Log Out</a></li>
+                <div class="caption"><strong>Hello, {{user[0]}}!</strong>
+                    <p>Welcome to your dashboard!</p>    
+                </div>
             </ul>
-        </nav>
+        </nav>    
     </header>
 
     <main>
