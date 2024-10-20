@@ -48,7 +48,7 @@ class LibraryApp:
                 cursor.close()
 
                 if id_count > 0:
-                    flash('⚠️ This ID is already in use.')
+                    flash('⚠️ There is already an account.')
                     return redirect(url_for('signin'))
                 if email_count > 0:
                     flash('⚠️ Email is already in use.')

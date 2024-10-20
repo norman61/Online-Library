@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
     <style>
+
         body {
             font-family: Arial, sans-serif;
-            background-image:url('/static/img/index.jpg');
+            background-image:url('/static/img/homepage bg.jpg');
             background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
             display: flex;
             justify-content: center;
@@ -18,32 +20,34 @@
         }
 
         .container {
-            background-color: transparent;
-            backdrop-filter: blur(5px);
-            border:5px solid white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 100%;
-            max-width: 400px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            padding: 6%;
+            width: 200%;
+            max-width: 500px;
             box-sizing: border-box;
-            height: 670px;
+            height: 700px;
+            margin-top: 80px;
         }
 
         h1 {
             font-size: 24px;
             color: white;
-            margin-bottom:15px;
+            margin-top: -10%;
             text-align: center;
-            -webkit-text-stroke: 1px  white;
-            font-weight:bold ;
+            font-weight: bolder;
         }
 
         label {
-            font-size: 16px;
-            display: block;
+            width: 100%;
+            padding: 10px;
+            display: inline-block;
+            font-weight: normal;
+            margin-bottom: -3px;
             color:white;
-            -webkit-text-stroke: 1px black;
-            font-weight: bold;
+            border: none;
+            box-sizing: border-box;
+            
         }
 
         input[type="text"],
@@ -53,34 +57,35 @@
             width: 100%;
             padding: 5px;
             margin-bottom:10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border:#ddd;
             box-sizing: border-box;
         }
 
         input[type="submit"] {
-            background-color:  orangered;
+            background-color: transparent;
             color: #fff;
-            border:2px solid #fff ;
+            border: 1px solid;
             border-radius: 4px;
-            padding: 8px;
+            padding: 10px;
+            margin-top: 5%;
             font-size: 16px;
+            margin-left: 25%;
             cursor: pointer;
-            width: 100%;
+            width: 50%;
             box-sizing: border-box;
         }
 
         input[type="submit"]:hover {
-            background-color: white;
-            color: orangered(24, 11, 198) ;
-            border:2px solid orangered(24, 11, 198);
+            background-color: #d76908;
+            color: white;
         }
 
         .flash-message {
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 4px;
-            color: #fff;
+            background-color: #fff;
+            color: red;
             text-align: center;
 
         }
