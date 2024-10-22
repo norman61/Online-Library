@@ -18,6 +18,70 @@
             align-items: center;
         }
 
+        header {
+            width: 100%;
+            height: 100px;
+            position: absolute;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 8px 0 #fff;
+            z-index: 1000;
+            border-radius: 3px;
+            padding: 0;
+        }
+
+        header .caption {
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            margin-left: 100px;
+            margin-bottom: -9%;
+            font-size: x-large;
+        }
+
+        header .main-menu {
+            display: flex;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        header .main-menu .buts {
+            color: white;
+            margin:0px  10px;
+            position: relative;
+            left: 1080px;
+            font-size: large;
+            margin-top: -1%;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-weight: normal;
+            border-radius: 8px;
+            background: var(--mainBlue);
+            padding: .6rem 1rem;
+            cursor: pointer;
+            box-shadow: 0 0px 4px 0px rgb(0, 30, 58);
+        }
+
+        nav a:hover {
+            background-color: darkorange;
+        }
+
+        .logo-main .caption p{
+            font-size: 20px;
+        }
+
+        nav ul .butss { 
+            position: relative;
+            right: -120%;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -88,7 +152,17 @@
     </style>
 </head>
 <body>
-
+    <header>
+        <nav>
+            <div class="caption">
+                <h1>Welcome to Admin Dashboard!</h1>
+            </div>
+            <ul class="main-menu">
+                <li class="buts"><a href="{{ url_for('notifications') }}">Transactions</a></li>
+                <li class="buts"><a href="{{ url_for('logout') }}">Log Out</a></li>
+            </ul>
+        </nav>
+    </header>
     <table>
         <tr>
             <th>#</th>

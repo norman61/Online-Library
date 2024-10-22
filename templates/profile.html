@@ -5,116 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <style>
-        body {
-            background-image: url('/static/img/lib bg.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+
+        body{
+        font-family: Arial, sans-serif;
+        height: 89vh;
+        width: 98.8.1vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow-x: hidden;
+        background-image:url('/static/img/lib\ bg.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         }
 
-        .container {
-            background-color: rgba(0, 0, 0, 0.6);
-            border: 2px solid #ddd;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 10px;
-            text-align: left;
+        h1{
+            color: white;
+            z-index: 1000;
+            position: absolute;
+            left: 6%;
+            top: 0;
         }
 
-        h1 {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: left;
-            border-bottom: 2px solid white;
-            border-bottom: 2px solid orangered(24, 11, 198);
-            padding-bottom: 10px;
+        hr{
+            position: absolute;
+            left: -1%;
+            top: 13%;
+            height: 2px;
+            width: 25%;
+            background-color: #FF4500;
+            border: none;
+            z-index: 1000;
         }
 
-        h2 {
-            font-size: 24px;
-            color: orangered(24, 11, 198);
-            margin: 10px 0;
+        .left-container {
+            width: 400px;
+            height: 95vh;
+            position: relative;
+            right: -100px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #000000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            left: -41.4%;
+            padding-bottom: 90px;
+            padding-right: 30px;
+            z-index: 1;
         }
 
-        p {
-            font-size: 18px;
-            color: #555;
-            margin: 5px 0;
+        .left-container a{
+            text-decoration: none;
         }
 
-        strong {
-            color: #333;
+        #btn{
+        top: 40%;
+        left: 46%;
+        background-color: #DD6F00;
+        color: white;
+        font-weight: large;
         }
-
-        .button-container {
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
+        
+        .btn1 {
+            margin-bottom: 40px;
+            padding: 10px 30px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-
+            font-size: 16px;
+            position: relative;
+            left: 42%;
+            top: 30%;
         }
 
-        button.update {
-            background-color: rgba(0, 0, 0, 0.2);;
-            color: white;
-            border: 2px solid;
+        .btn2 {
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-        }
-
-        button.update:hover {
-            background-color: white;
-            color: black;
-        }
-
-        button.logout {
-            background-color: orangered;
-            color: white;
-            border: 2px solid white;
-            cursor: pointer;
-        
-        }
-        button.logout:hover {
-            background-color: white;
-            color: orangered;
-            border: 2px solid orangered;
+            font-size: 16px;
+            position: relative;
+            left: 42%;
+            top: 28.9%;
         }
         
+        #btn:hover {
+            background-color: white;
+            color: #DD6F00;
+            transform: scale(1.1);
+            border: 2px solid black;
+        }
+
+        .right-container {
+            width: 400px;
+            height: 80vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            position: absolute;
+            right: 5%;
+            top: 14px;
+            padding-bottom: 90px;
+            padding-right: 35%;
+        }
+
+        header{
+            margin-bottom: 40px;
+            padding: 10px 44px;
+            height: 10vh;
+            width: 90%;
+            background-color: #DD6F00;
+            color: #fff;
+            border: none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            left: 0;
+            z-index:5000;
+        }
+        
+        header p{
+            font-size: 18px;
+            text-align: center;
+            position: relative;
+            bottom: 15px;
+        }
+        
+        .right-container h4{
+            font-size: 25px;
+            position: absolute;
+            top: 15%;
+            left: 40%;
+            color: #fff;
+            z-index: 3;
+        }
+
+        .column-container {
+            display: flex;
+            flex-direction: column;
+            z-index: 3;
+            position: absolute;
+            bottom: 10%;
+            gap: 10px;
+          }
+          
+        .column-container .text {
+            font-size: 25px;
+            text-align: start;
+            position: relative;
+            left: 10px;
+            margin: 10px 0;
+            color: #DD6F00;
+          }
+
+          .column-container span {
+            font-size: 25px;
+            text-align: start;
+            position: relative;
+            left: 10px;
+            margin: 10px 0;
+            color: #c9c9c9;
+          }
+
+          .right-container .hr{
+            position: relative;
+            top: -25px;
+            left: 1.2%;
+            height: 2px;
+            width: 125vh;
+            background-color: #FF4500;
+            border: none;
+            z-index: 3;
+        }
+
     </style>
 </head>
 <body>
+    <div><h1>PROFILE</h1>
+        <hr>
+    </div>
     
-    <div class="container">
-        <button onclick="history.back()">Go Back</button>
-        <h1>User Profile</h1>
-        
-        <h2>{{ user['name'] }}</h2>
-        
-        <p><strong>ID:</strong> {{ user['id'] }}</p>
-        <p><strong>Course:</strong> {{ user['course'] }}</p>
-        <p><strong>Year:</strong> {{ user['year'] }}</p>
-        <p><strong>Email:</strong> {{ user['email'] }}</p>
 
-        
-            <a href="/update_profile"><button class="update">Update Profile</button></a>
-            <a href="/logout"><button class="logout">Log Out</button></a>
-        </div>
+    <div class="left-container">
+        <a href="home"><button class="btn1" id="btn"><b>Back to Dashboard</b></button></a>
+        <a href="update_profile"><button class="btn2" id="btn"><b>Update Profile</b></button></a>
+    </div>
+
+    <div class="right-container">
+        <header>
+            <p><b>Welcome to your Library Profile, {{ user['name']}}! 
+            <br> Explore your borrowing history, manage your account, <br> and stay updated
+            with the books you love.</b></p>
+        </header>
+
+        <div class="column-container">
+            <div class="text">ID: <span>{{ user['id'] }}</span></div>
+            <hr class="hr">
+            <div class="text">NAME: <span>{{ user['name'] }}</span></div>
+            <hr class="hr">
+            <div class="text">COURSE: <span>{{ user['course'] }}</span></div>
+            <hr class="hr">
+            <div class="text">YEAR: <span>{{ user['year'] }}</span></div>
+            <hr class="hr">
+            <div class="text">Email: <span>{{ user['email'] }}</span></div>
+            <hr class="hr">
+          </div>
+          
     </div>
 </body>
 </html>

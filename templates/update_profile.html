@@ -3,51 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Update Profile</title>
     <style>
+
         body {
-            height: 100vh;
-            margin: 0;
+            height: 89vh;
+            width: 98.8.1vw;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: Arial, sans-serif;
-            background-image:url('/static/img/index.jpg');
+            background-image:url('/static/img/lib\ bg.jpg');
             background-repeat: no-repeat;
+            background-position: center;
             background-size: cover;
-            color: white;
-            position: relative;
+            overflow-x: hidden;
         }
 
-
         .container {
-            background-color: burlywood;
-            backdrop-filter: blur(10px);
-            border: 2px solid #ddd;
+            background-color: rgba(0, 0, 0, 0.8);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            width: 90%;
+            padding: 30px;
+            width: 100%;
             max-width: 500px;
-            border-radius: 10px;
+            border-radius: 5px;
             box-sizing: border-box;
-            text-align: left;
         }
 
         h1 {
-            font-size: 25px;
-            color: rgb(7, 7, 7);
-            margin-bottom:15px;
+            font-size: 30px;
+            color: white;
+            margin-bottom: 20px;
             text-align: center;
-            -webkit-text-stroke: 1px  rgb(0, 0, 0);
-            font-weight:bold ;
+            font-weight:bold;
         }
 
         label {
             font-size: 16px;
             display: block;
-            color:rgb(10, 7, 7);
-            -webkit-text-stroke: 1px black;
-            font-weight: bold;
+            color: white;
+            font-weight: normal;
+        }
+
+        button {
+            background-color: transparent;
+            color: white;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #DD6F00;
+            color: #fff;
         }
 
         input[type="text"],
@@ -63,24 +69,25 @@
         }
 
         input[type="submit"] {
-            background-color:  rgb(5, 4, 4);
-            color: #fffffff5;
-            background-color: orangered(24, 11, 198);
+            background-color: #DD6F00;
             color: #fff;
-            border:2px solid #fff ;
-            border-radius: 4px;
-            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin-left: 35%;
+            margin-top: 10px;
+            padding: 13px;
             font-size: 16px;
             cursor: pointer;
-            width: 100%;
-            box-sizing: border-box;
+            font-weight: bold;
         }
 
         input[type="submit"]:hover {
             background-color: white;
-            color: orangered(24, 11, 198) ;
-            border:2px solid orangered(24, 11, 198);
+            color: #DD6F00;
+            transform: scale(1.1);
+            border-radius: 2px solid black;
         }
+
 
        
     </style>
@@ -88,7 +95,7 @@
 <body>
     <div class="container">
         <form action="/update_profile" method="post">
-            <button onclick="BACK">BACK</button>
+            <a href="profile"><button style="font-size: 16px; border: 1px solid white;">&#8592; back</button></a>
             <h1>Your Profile</h1>
             
             <label for="name">ID:</label>
@@ -101,7 +108,13 @@
             <input type="text" name="course" id="course" value="{{ user[2] }}" required>
 
             <label for="year">Year:</label>
-            <input type="text" name="year" id="year" value="{{ user[3] }}" required>
+            <select name="year" id="year" required>
+                <option value="">--SELECT--</option>
+                <option value="First Year">1st Year</option>
+                <option value="Second Year">2nd Year</option>
+                <option value="Third Year">3rd Year</option>
+                <option value="Fourth Year">4th Year</option>
+            </select><br>
 
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" value="{{ user[4] }}" required>

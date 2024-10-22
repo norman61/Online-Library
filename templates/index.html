@@ -47,59 +47,34 @@
         }
 
         button {
-            background-color: transparent;
-            color: #fff;
+            background-color: white;
+            color: black;
             text-decoration: none; 
-            border: 1px solid #fff;
+            font-size: 16px;
+            font-weight: 500;
+            border: 1px solid #d76908;
             border-radius: 5px; 
             padding: 10px;
             width: 12%;
             margin-top: 40px;
             margin-right: 10px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.2s ease;
         }
 
         button:hover {
             background-color: #d76908;
+            color: white;
+            border: 2px solid white;
         }
 
-        footer {
-            margin-top: auto;
-            padding: 20px 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            width: 100%;
-        }
-
-        .footer-buttons {
-            text-align: center;
-        }
-
-        .footer-buttons a {
-            color: #fff;
-            text-decoration: none; 
-            padding: 10px 20px;
-            border: 1px solid #fff; 
-            border-radius: 5px; 
-            margin: 0 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .footer-buttons a:hover {
-            background-color: #d76908;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>WELCOME TO THE <span style="color: #d76908;">LIBRARY</span></h1>
         <p>Explore and Borrow <br> new Books</p>
-        <a href="/login"><button>GET STARTED</button></a>
+        <a href="/login"><button>Admin</button></a>
+        <a href="/login"><button>User</button></a>
     </div>
-    <footer>
-        <div class="footer-buttons">
-            <a href="{{ url_for('about') }}" class="button">About Us</a>
-            <a href="{{ url_for('contact') }}" class="button">Contact Us</a>
-        </div>
-    </footer>
 </body>
 </html>
