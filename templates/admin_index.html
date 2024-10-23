@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Dashboard</title>
     <style> 
         body {
             background-image: url('/static/img/lib bg.jpg');
@@ -166,9 +166,9 @@
     <table>
         <tr>
             <th>#</th>
+            <th>ID</th>
             <th>Name</th>
-            <th>Title</th>
-            <th>Author</th>
+            <th>Book Code/Title</th>
             <th>Borrow Date</th>
             <th>Return Date</th>
             <th>Status</th>
@@ -185,10 +185,10 @@
             <td>{{books[6]}}</td>
             <td>
                 <div class="dropdown">
-                    <button class="dropbtn">Action</button>
+                    <button class="dropbtn">Status</button>
                     <div class="dropdown-content">
-                        <a href="/admin/{{books[0]}}">Accepted</a>
-                        <a href="/admin_index/{{books[0]}}">Delete</a>
+                        <a href="/admin/{{books[0]}}">Inactive</a>
+                        <a href="/admin_index/{{books[0]}}">Active</a>
                     </div>
                 </div>
             </td>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In</title>
+    <title>Sign Up</title>
     <style>
 
         body {
@@ -26,8 +26,8 @@
             width: 200%;
             max-width: 500px;
             box-sizing: border-box;
-            height: 700px;
-            margin-top: 80px;
+            height: 720px;
+            margin-top: 60px;
         }
 
         h1 {
@@ -81,13 +81,12 @@
         }
 
         .flash-message {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            background-color: #fff;
-            color: red;
-            text-align: center;
-
+            background-color: green;
+            color: #fff;
+        }
+        
+        .flash-message.show {
+            color: white;
         }
 
         .flash-message.error {
@@ -97,6 +96,7 @@
         .flash-message.success {
             background-color: #28a745;
         }
+
     </style>
 </head>
 <body>
@@ -131,18 +131,32 @@
         <input type="password" name="repassword" required><br>
 
         <input type="submit" value="REGISTER">
-    </form>
-    
-    
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
     </div>
+    </form>
+
+    <div id="flash-message" class="'flash-message">
+        {{ message }}
+    </div>
+    
+    <script>
+        function showFlashMessage(message) {
+            const flashMessage = document.getElementById('flash-message');
+            flashMessage.textContent = message;
+            flashMessage.classList.add('show');
+
+            setTimeout(() => {
+                flashMessage.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
 </body>
 </html>

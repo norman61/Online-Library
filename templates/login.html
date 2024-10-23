@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogIn</title>
+    <title>Log In</title>
     <style>
        
         body {
@@ -36,10 +36,11 @@
         label {
             width: 100%;
             padding: 10px;
-            display: inline-block;
-            font-size: 13px;
-            font-weight: bold;
+            display: block;
+            font-size: 17px;
+            font-weight: normal;
             color:white;
+            margin-bottom: -7%;
 
         }
 
@@ -49,7 +50,7 @@
         select {
             width: 100%;
             padding: 10px;
-            margin-bottom:10px;
+            margin-bottom: 10px;
             border: none;
             box-sizing: border-box;
 
@@ -73,15 +74,34 @@
         }
 
         .flash-message {
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            background-color: green;
+            border-radius: 5px;
+            z-index: 1000;
+            margin-bottom: 20px;
+            border-radius: 5px;
             color: #fff;
             text-align: center;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        
+        .flash-message.show {
+            display: block;
         }
 
         .flash-message.error {
-            background-color: white;
+            background-color: #dc3545;
+            border: 1px solid #c82333;
+        }
+
+        .flash-message.success {
+            background-color: #28a745;
+            border: 1px solid #218838;
         }
 
         .link {
@@ -100,7 +120,7 @@
     <div class = "container">
         <h1>Join Us Today!</h1>
         <form action="/login" method="post">
-            <label for="email">ID Number or Email</label><br>
+            <label for="email">Email</label><br>
             <input type="email" name="email" autocomplete="off" required><br>   
 
             <label for="password" autocomplete="off">Password</label><br>
@@ -108,6 +128,31 @@
 
             <input type="submit" value="LOGIN">
         </form>
+        <div id="flash-message" class="'flash-message">
+            {{ message }}
+        </div>
+        
+        <script>
+            function showFlashMessage(message) {
+                const flashMessage = document.getElementById('flash-message');
+                flashMessage.textContent = message;
+                flashMessage.classList.add('show');
+    
+                setTimeout(() => {
+                    flashMessage.classList.remove('show');
+                }, 3000);
+            }
+        </script>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    showFlashMessage('{{ message }}');
+                    <ul class="flashes">
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
         <a class="link" href="/signin">Need an account? Create one!</a>
     </div>
 </body>

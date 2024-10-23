@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>User Dashboard</title>
     <style>
 
         body {
@@ -28,8 +28,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 4px 8px 0 #fff;
+            background-color: #c94e21e0;
             z-index: 1000;
             border-radius: 3px;
             padding: 0;
@@ -39,9 +38,11 @@
             color: #fff;
             display: flex;
             flex-direction: column;
-            margin-left: 20px;
-            margin-bottom: -9%;
-            font-size: x-large;
+            margin-left: 50px;
+            font-size: xx-large;
+            margin: 100px;
+            margin-top: 22%;
+            line-height: 0.6;
         }
 
         header .main-menu {
@@ -53,11 +54,11 @@
 
         header .main-menu .buts {
             color: white;
-            margin:0px  10px;
+            margin: 0px  10px;
             position: relative;
-            left: 800px;
+            left: 830px;
             font-size: large;
-            margin-top: -8%;
+            margin-top: -27%;
         }
 
         nav a {
@@ -72,7 +73,8 @@
         }
 
         nav a:hover {
-            background-color: darkorange;
+            background-color: white;
+            color: #c94e21e0;
         }
 
         .logo-main .caption p{
@@ -94,28 +96,33 @@
         .section-container {
             display: flex;
             justify-content: space-between;
-            gap: 40px;
+            gap: 60px;
             position: relative;
-            top: 70px;
+            top: 50px;
+            max-height: 500px;
+            max-width: 500%;
         }
 
         .borrow, .available-books {
             flex: 1;
             background: rgba(0, 0, 0, 0.6);
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: whitesmoke;
+            padding-top: 10px;
+            margin-top: 2px;
+            color: white;
+            text-align: center;
         }
 
         label {
             display: block;
-            margin-top: 10px;
+            margin-top: 5px;
             font-weight: bold;
-            color: whitesmoke;
+            color: white
         }
 
         input[type="text"], input[type="date"] {
@@ -143,7 +150,7 @@
         }
 
         input[type="submit"]:hover {
-            background-color: darkorange;
+            background-color: #c94e21fa;
         }
 
         .available-books ul {
@@ -169,6 +176,30 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow: hidden;
+            font-weight: medium;
+        }
+
+        .scroll-container {
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 9px;
+            scroll-behavior: smooth;
+        }
+
+        .book {
+            padding: 15px;
+            margin: 8px 0;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
     </style>
 </head>
@@ -193,14 +224,15 @@
             <section class="borrow">
                 <h2>Borrow Books</h2>
                 <form action="/home" method="post">
+
+                    <label for="name">ID</label>
+                    <input type="text" name="id" required>
+
                     <label for="name">Name</label>
                     <input type="text" name="name" required>
-                    
-                    <label for="title">Book Title</label>
-                    <input type="text" name="title" id="title" required>
 
-                    <label for="author">Author</label>
-                    <input type="text" name="author" id="author" required>
+                    <label for="title">Book Code or Title</label>
+                    <input type="text" name="title" id="title" required>
 
                     <label for="bdate">Borrow Date</label>
                     <input type="date" name="bdate" id="bdate" required>
@@ -214,21 +246,51 @@
 
             <section class="available-books">
                 <h2>Available Books</h2>
-                <ul>
-                    <li>
-                        <a href="{{url_for('profile')}}"><img src="{{ url_for('static', filename='img/book1.png') }}" alt="Book 1"></a>
-                        <span>The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win (Hardcover) by Gene Kim</span>
-                    </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/book2.jpg') }}" alt="Book 2">
-                        <span>The Pragmatic Programmer: From Journeyman to Master (Paperback) by Andy Hunt</span>
-                    </li>
-                    <li>
-                        <img src="{{ url_for('static', filename='img/book3.jpg') }}" alt="Book 3">
-                        <span>The Mythical Man-Month: Essays on Software Engineering (Paperback)by Frederick P. Brooks Jr.</span>
-                    </li>
-                    
-                </ul>
+                    <div class="content">
+                        <div class="scroll-container">
+                            <div class="book">ITE 366 Introduction To Computing</div>
+                            <div class="book">ITE 260 Computer Programming 1</div>
+                            <div class="book">ITE 186 Computer Programming 2</div>
+                            <div class="book">ITE 399 Human Computer Interaction</div>
+                            <div class="book">ITE 048 Discrete Structures</div>
+                            <div class="book">ITE 298 Information Management</div>
+                            <div class="book">ITE 300 Object-Oriented Programming</div>
+                            <div class="book">ITE 292 Networking 1</div>
+                            <div class="book">ITE 031 Data Structures and Algorithms</div>
+                            <div class="book">ITE 083 IT Project Management </div>
+                            <div class="book">ITE 393 Applications Development and Emerging Technologies</div>
+                            <div class="book">ITE 400 Systems Integration and Architecture 1</div>
+                            <div class="book">ITE 308 Web Systems and Technologies</div>
+                            <div class="book">ITE 380 Human Computer Interaction 2</div>
+                            <div class="book">ITE 359 Networking 2</div>
+                            <div class="book">ITE 302 Information Assurance and Security 1</div>
+                            <div class="book">ITE 353 Data Scalability and Analytics</div>
+                            <div class="book">ITE 307 Quantitative Methods</div>
+                            <div class="book">ITE 314 Advanced Database Systems</div>
+                            <div class="book">ITE 309 Capstone Project and Research 1</div>
+                            <div class="book">ITE 203 Systems Administration and Maintenance</div>
+                            <div class="book">ITE 370 Information Assurance and Security 2</div>
+                            <div class="book">ITE 401 Platform Technologies</div>
+                            <div class="book">ITE 310 Capstone Project and Research 2</div>
+                            <div class="book">ITE 381 IT Business Solutions</div>
+                            <div class="book">ITE 367 Managing IT Resources</div>
+                            <div class="book">ITE 311 Practicum</div>
+                            <div class="book">BAM 285 Business Analysis for IT</div>
+                            <div class="book">BAM 286 Applied Analytics in Business for IT</div>
+                            <div class="book">ITE 382 Intelligent Systems</div>
+                            <div class="book">ITE 383 Network Security</div>
+                            <div class="book">ITE 384 Computer Forenics</div>
+                            <div class="book">ITE 385 Ethical Hacking</div>
+                            <div class="book">ITE 387 Advanced Programming</div>
+                            <div class="book">ITE 235 Game Development</div>
+                            <div class="book">ITE 386 Cloud Programming</div>
+                            <div class="book">ITE 391 Free Hand and Digital Drawing</div>
+                            <div class="book">ITE 392 Scryptwriting and Story Board Design</div>
+                            <div class="book">ITE 340 3D Animation</div>
+                            <div class="book">Lean-Up and In-Betweening for IT</div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </main>

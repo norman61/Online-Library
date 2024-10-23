@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to Admin Dashboard</h1>
+    
+    <h2>All Registered Users</h2>
+    <h1>Admin Dashboard</h1>
+
+
+<h2>Users List</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Course</th>
+        <th>Year</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user[0] }}</td>
+        <td>{{ user[1] }}</td>
+        <td>{{ user[2] }}</td>
+        <td>{{ user[3] }}</td>
+        <td>{{ user[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Books with Borrowers Count</h2>
+<table border="1">
+    <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>ISBN</th>
+        <th>Borrow Date</th>
+        <th>Return Date</th>
+        <th>Status</th>
+        <th>Request</th>
+        <th>Borrower Count</th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <td>{{ book[0] }}</td>
+        <td>{{ book[1] }}</td>
+        <td>{{ book[2] }}</td>
+        <td>{{ book[3] }}</td>
+    </tr> 
+    {% endfor %}
+</table>
+
+<h2>Borrowed Books Details</h2>
+<table border="1">
+    <tr>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>ISBN</th>
+        <th>Borrow Date</th>
+        <th>Return Date</th>
+    </tr>
+    {% for record in borrowed_books %}
+    <tr>
+        <td>{{ record[0] }}</td>
+        <td>{{ record[1] }}</td>
+        <td>{{ record[2] }}</td>
+        <td>{{ record[3] }}</td>
+        <td>{{ record[4] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
