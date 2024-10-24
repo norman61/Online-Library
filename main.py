@@ -21,7 +21,6 @@ class LibraryApp:
         @self.app.route("/signin", methods=['GET', 'POST'])
         def signin():
             if request.method == "POST":
-                id = request.form['id']
                 name = request.form['name']
                 course = request.form['course']
                 year = request.form['year']
@@ -48,8 +47,8 @@ class LibraryApp:
                     return redirect(url_for('signin'))
 
                 cursor = self.mysql.connection.cursor()
-                cursor.execute('INSERT INTO users (Id, Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s, %s)',
-                               (id, name, course, year, email, password))
+                cursor.execute('INSERT INTO users (Id, Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s)',
+                               (name, course, year, email, password))
                 self.mysql.connection.commit()
                 cursor.close()
 
@@ -72,20 +71,19 @@ class LibraryApp:
 
                 if user:
                     session['id'] = user[0]
-                    is_admin = user[1]
+                    is_admin = user[0]
                     flash('✅ Successfully logged in!', 'success')
 
-                if is_admin:
-                    return redirect(url_for('admin_index'))
+                    if is_admin:
+                        return redirect(url_for('admin_dashboard'))
                 
-                else:
-                    return redirect(url_for('home'))
-                    flash('⚠️Login failed. Please check your credentials.')
-
-                    return redirect(url_for('login'))
+                    else:
+                        return redirect(url_for('home'))
+                
+                flash('⚠️Login failed. Please check your credentials.')
+                return redirect(url_for('login'))
             
             return render_template('login.html')
-
 
         @self.app.route("/home", methods=['GET', 'POST'])
         def home():
@@ -106,15 +104,14 @@ class LibraryApp:
             cursor.close()
             
             if request.method == "POST":
-                user_id = request.form["id"]
                 name = request.form["name"]
-                title = request.form["book code/title"]
+                isbn = request.form["isbn"]
                 bdate = request.form["bdate"]
                 rdate = request.form["rdate"]
 
                 cursor = self.mysql.connection.cursor()
-                cursor.execute('INSERT INTO books (ID, Name, Book Code/Title, Borrow_Date, Return_Date) VALUES (%s, %s, %s, %s, %s, %s)',
-                               (user_id, name, title, bdate, rdate,))
+                cursor.execute('INSERT INTO books (Name, ISBN, Borrow_Date, Return_Date) VALUES (%s, %s, %s, %s, %s, %s)',
+                               (name, isbn, bdate, rdate,))
                 self.mysql.connection.commit()
                 cursor.close()
 
@@ -208,9 +205,9 @@ class LibraryApp:
                 books=books_with_borrowers, 
                 borrowed_books=borrowed_books)
         
-        @self.app.route("/notifications")
-        def notifications():
-            return render_template('notifications.html')
+        @self.app.route("/borrowing_transactions")
+        def borrowing_transactions():
+            return render_template('borrowing_transactions.html')
 
         @self.app.route("/profile")
         def profile():
@@ -245,11 +242,10 @@ class LibraryApp:
                 return redirect(url_for('login'))
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute("SELECT Id, Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
+            cursor.execute("Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
             user = cursor.fetchone()
 
             if request.method == 'POST':
-                new_id = request.form['id']
                 name = request.form['name']
                 course = request.form['course']
                 year = request.form['year']
@@ -257,14 +253,14 @@ class LibraryApp:
 
                 cursor.execute("""
                     UPDATE users 
-                    SET Id = %s, Name = %s, Course = %s, Year = %s, Email = %s 
+                    SET Id = Name = %s, Course = %s, Year = %s, Email = %s 
                     WHERE Id = %s
-                """, (new_id, name, course, year, email, user_id))
+                """, (name, course, year, email, user_id))
 
                 self.mysql.connection.commit()
                 cursor.close()
 
-                session['id'] = new_id
+                session['id'] = id
                 flash('Profile updated successfully.')
                 return redirect(url_for('profile'))
 

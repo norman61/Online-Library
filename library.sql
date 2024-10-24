@@ -28,9 +28,9 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `books` (
-  `Id` int(11) NOT NULL,
-  `Title` varchar(255) NOT NULL,
-  `Author` varchar(255) NOT NULL,
+  `ID` int(11) NOT NULL,
+  `Name` varchar(255) NOT NULL,
+  `ISBN` varchar(255) NOT NULL,
   `Borrow_Date` date NOT NULL,
   `Return_Date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -39,7 +39,7 @@ CREATE TABLE `books` (
 -- Dumping data for table `books`
 --
 
-INSERT INTO `books` (`Id`, `Title`, `Author`, `Borrow_Date`, `Return_Date`) VALUES
+INSERT INTO `books` (`ID`, `Name`, `ISBN`, `Borrow_Date`, `Return_Date`) VALUES
 (1, 'The Phoenix Project', 'Gene Kim', '2024-08-25', '2024-08-31'),
 (2, 'The Pragmatic Programmer', 'Andy Hunt', '2024-08-25', '2024-08-30'),
 (3, 'The Mythical Man-Month', 'Frederick', '2024-08-29', '2024-09-07'),
@@ -61,7 +61,7 @@ INSERT INTO `books` (`Id`, `Title`, `Author`, `Borrow_Date`, `Return_Date`) VALU
 CREATE TABLE `borrowed_books` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `book_id` int(11) NOT NULL,
+  `book_id` varchar(11) NOT NULL,
   `borrow_date` date NOT NULL,
   `return_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

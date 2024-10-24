@@ -73,37 +73,6 @@
             background-color: #d76908;
         }
 
-        .flash-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px;
-            background-color: green;
-            border-radius: 5px;
-            z-index: 1000;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            display: none;
-        }
-        
-        .flash-message.show {
-            display: block;
-        }
-
-        .flash-message.error {
-            background-color: #dc3545;
-            border: 1px solid #c82333;
-        }
-
-        .flash-message.success {
-            background-color: #28a745;
-            border: 1px solid #218838;
-        }
-
         .link {
             display: block;
             margin-left: 17%;
@@ -128,31 +97,6 @@
 
             <input type="submit" value="LOGIN">
         </form>
-        <div id="flash-message" class="'flash-message">
-            {{ message }}
-        </div>
-        
-        <script>
-            function showFlashMessage(message) {
-                const flashMessage = document.getElementById('flash-message');
-                flashMessage.textContent = message;
-                flashMessage.classList.add('show');
-    
-                setTimeout(() => {
-                    flashMessage.classList.remove('show');
-                }, 3000);
-            }
-        </script>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    showFlashMessage('{{ message }}');
-                    <ul class="flashes">
-                        {% for category, message in messages %}
-                            <li class="{{ category }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
         <a class="link" href="/signin">Need an account? Create one!</a>
     </div>
 </body>

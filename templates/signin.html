@@ -27,7 +27,8 @@
             max-width: 500px;
             box-sizing: border-box;
             height: 720px;
-            margin-top: 60px;
+            margin-top: 80px;
+            margin-bottom: -10px;
         }
 
         h1 {
@@ -79,32 +80,12 @@
             background-color: #d76908;
             color: white;
         }
-
-        .flash-message {
-            background-color: green;
-            color: #fff;
-        }
-        
-        .flash-message.show {
-            color: white;
-        }
-
-        .flash-message.error {
-            background-color: #dc3545;
-        }
-
-        .flash-message.success {
-            background-color: #28a745;
-        }
-
     </style>
 </head>
 <body>
     <div class = "container">
         <h1>Registration Form</h1>
     <form action="/signin" method="post">
-        <label for="id">ID Number</label><br>
-        <input type="text" name="id" required><br>
 
         <label for="name">Name</label><br>
         <input type="text" name="name" required><br>
@@ -133,30 +114,5 @@
         <input type="submit" value="REGISTER">
     </div>
     </form>
-
-    <div id="flash-message" class="'flash-message">
-        {{ message }}
-    </div>
-    
-    <script>
-        function showFlashMessage(message) {
-            const flashMessage = document.getElementById('flash-message');
-            flashMessage.textContent = message;
-            flashMessage.classList.add('show');
-
-            setTimeout(() => {
-                flashMessage.classList.remove('show');
-            }, 3000);
-        }
-    </script>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                    {% for category, message in messages %}
-                        <li class="{{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
 </body>
 </html>
