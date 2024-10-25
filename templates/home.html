@@ -5,290 +5,207 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <style>
-
         body {
-            background-image:url('/static/img/lib bg.jpg');
+            background-image: url('/static/img/lib_bg.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
+            color: #fff;
         }
 
         header {
             width: 100%;
-            height: 100px;
-            position: absolute;
+            height: 80px;
+            position: fixed;
             top: 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #c94e21e0;
+            background: rgba(201, 78, 33, 0.9);
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             z-index: 1000;
-            border-radius: 3px;
-            padding: 0;
         }
 
         header .caption {
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            margin-left: 50px;
-            font-size: xx-large;
-            margin: 100px;
-            margin-top: 25%;
-            line-height: 0.4;
+            font-size: 24px;
+            font-weight: bold;
         }
 
         header .main-menu {
             display: flex;
-            list-style-type: none;
+            list-style: none;
             margin: 0;
             padding: 0;
         }
 
         header .main-menu .buts {
-            color: white;
-            margin: 0px  10px;
-            position: relative;
-            left: 830px;
-            font-size: large;
-            margin-top: -28%;
+            margin: 0 15px;
+            color: #fff;
+            font-size: 18px;
+            transition: color 0.3s;
         }
 
-        nav a {
-            text-decoration: none;
-            color: white;
-            font-weight: normal;
-            border-radius: 8px;
-            background: var(--mainBlue);
-            padding: .6rem 1rem;
-            cursor: pointer;
-            box-shadow: 0 0px 4px 0px rgb(0, 30, 58);
-        }
-
-        nav a:hover {
-            background-color: white;
-            color: #c94e21e0;
-        }
-
-        .logo-main .caption p{
-            font-size: 20px;
-        }
-
-        nav ul .butss { 
-            position: relative;
-            right: -120%;
+        header .main-menu .buts:hover {
+            color: #f9d34d;
         }
 
         main {
-            padding: 20px;
+            padding: 100px 20px 20px; /* Space for header */
             max-width: 1200px;
             margin: auto;
-
         }
 
-        .section-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 60px;
-            position: relative;
-            top: 50px;
-            max-height: 500px;
-            max-width: 500%;
+        .message-area {
+            margin-bottom: 20px;
         }
 
-        .borrow, .available-books {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            padding-top: 10px;
-            margin-top: 10px;
-            color: white;
-            text-align: center;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-            color: white
-        }
-
-        input[type="text"], input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid orangered(24, 11, 198);
-            border-radius: 5px;
-            box-sizing: border-box;
-            border: none;
-            font-family: Arial, sans-serif;;
-        }
-
-        input[type="submit"] {
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            padding: 10px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 30px;
-            margin-left: 35%;
-            border: 4px rgba(0, 0, 0, 0.4);
-
-        }
-
-        input[type="submit"]:hover {
-            background-color: #c94e21fa;
-        }
-
-        .available-books ul {
-            list-style-type: none;
+        .message-area ul {
+            list-style: none;
             padding: 0;
         }
 
-        .available-books ul li {
-            background-color: #f9f9f9;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .available-books ul li img {
-            width: 50px;
-            height: 75px;
-            object-fit: cover;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        
-        .content {
-            flex: 1;
+        .available-books {
+            background: rgba(0, 0, 0, 0.8);
             padding: 20px;
-            overflow: hidden;
-            font-weight: medium;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .scroll-container {
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f9d34d;
+        }
+
+        table {
             width: 100%;
-            max-height: 300px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 9px;
-            scroll-behavior: smooth;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .book {
-            padding: 15px;
-            margin: 8px 0;
-            background-color: #f0f0f0;
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: rgba(201, 78, 33, 0.7);
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="date"], input[type="submit"] {
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
             border-radius: 5px;
-            cursor: pointer;
         }
 
+        input[type="date"] {
+            width: calc(45% - 10px);
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        input[type="submit"] {
+            background: #f9d34d;
+            color: #000;
+            cursor: pointer;
+            margin-left: 10px;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background: #c94e21;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                padding: 10px;
+            }
+
+            header .caption {
+                margin-bottom: 10px;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
+        <div class="caption">
+            Hello, {{ user[0] }}! Welcome to Tech-Library
+        </div>
         <nav>
-            <div class="caption">
-                <strong>Hello, {{ user[0] }}!</strong>
-                <p>Welcome to Tech-Library!</p>
-            </div>
             <ul class="main-menu">
                 <li class="buts"><a href="{{ url_for('profile') }}">Profile</a></li>
-                <li class="buts"><a href="{{ url_for('borrowing_transactions') }}">Borrowed Transactions</a></li>
+                <li class="buts"><a href="{{ url_for('borrow') }}">Books</a></li>
                 <li class="buts"><a href="{{ url_for('logout') }}">Log Out</a></li>
             </ul>
         </nav>
     </header>
-    
 
     <main>
-        <div class="section-container">
-            <section class="borrow">
-                <h2>Borrow Books</h2>
-                <form action="/home" method="post">
-
-                    <label for="name">Name</label>
-                    <input type="text" name="name" required>
-
-                    <label for="title">ISBN</label>
-                    <input type="text" name="title" id="title" required>
-
-                    <label for="bdate">Borrow Date</label>
-                    <input type="date" name="bdate" id="bdate" required>
-
-                    <label for="rdate">Return Date</label>
-                    <input type="date" name="rdate" id="rdate" required>
-
-                    <input type="submit" value="BORROW">
-                </form>
-            </section>
-
-            <section class="available-books">
-                <h2>Available Books</h2>
-                    <div class="content">
-                        <div class="scroll-container">
-                            <div class="book">ITE 366 Introduction To Computing</div>
-                            <div class="book">ITE 260 Computer Programming 1</div>
-                            <div class="book">ITE 186 Computer Programming 2</div>
-                            <div class="book">ITE 399 Human Computer Interaction</div>
-                            <div class="book">ITE 048 Discrete Structures</div>
-                            <div class="book">ITE 298 Information Management</div>
-                            <div class="book">ITE 300 Object-Oriented Programming</div>
-                            <div class="book">ITE 292 Networking 1</div>
-                            <div class="book">ITE 031 Data Structures and Algorithms</div>
-                            <div class="book">ITE 083 IT Project Management </div>
-                            <div class="book">ITE 393 Applications Development and Emerging Technologies</div>
-                            <div class="book">ITE 400 Systems Integration and Architecture 1</div>
-                            <div class="book">ITE 308 Web Systems and Technologies</div>
-                            <div class="book">ITE 380 Human Computer Interaction 2</div>
-                            <div class="book">ITE 359 Networking 2</div>
-                            <div class="book">ITE 302 Information Assurance and Security 1</div>
-                            <div class="book">ITE 353 Data Scalability and Analytics</div>
-                            <div class="book">ITE 307 Quantitative Methods</div>
-                            <div class="book">ITE 314 Advanced Database Systems</div>
-                            <div class="book">ITE 309 Capstone Project and Research 1</div>
-                            <div class="book">ITE 203 Systems Administration and Maintenance</div>
-                            <div class="book">ITE 370 Information Assurance and Security 2</div>
-                            <div class="book">ITE 401 Platform Technologies</div>
-                            <div class="book">ITE 310 Capstone Project and Research 2</div>
-                            <div class="book">ITE 381 IT Business Solutions</div>
-                            <div class="book">ITE 367 Managing IT Resources</div>
-                            <div class="book">ITE 311 Practicum</div>
-                            <div class="book">BAM 285 Business Analysis for IT</div>
-                            <div class="book">BAM 286 Applied Analytics in Business for IT</div>
-                            <div class="book">ITE 382 Intelligent Systems</div>
-                            <div class="book">ITE 383 Network Security</div>
-                            <div class="book">ITE 384 Computer Forenics</div>
-                            <div class="book">ITE 385 Ethical Hacking</div>
-                            <div class="book">ITE 387 Advanced Programming</div>
-                            <div class="book">ITE 235 Game Development</div>
-                            <div class="book">ITE 386 Cloud Programming</div>
-                            <div class="book">ITE 391 Free Hand and Digital Drawing</div>
-                            <div class="book">ITE 392 Scryptwriting and Story Board Design</div>
-                            <div class="book">ITE 340 3D Animation</div>
-                            <div class="book">Lean-Up and In-Betweening for IT</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <div class="message-area">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul>
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+        
+        <div class="available-books">
+            <h2>Available Books</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>ISBN</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if available_books %}
+                        {% for book in available_books %}
+                            <tr>
+                                <td>{{ book[0] }}</td>
+                                <td>{{ book[1] }}</td>
+                                <td>{{ book[2] }}</td>
+                                <td>{{ book[3] }}</td>
+                                <td>
+                                    <form action="{{ url_for('borrow_book') }}" method="post">
+                                        <input type="hidden" name="book_id" value="{{ book[0] }}">
+                                        <label for="borrow_date">Borrow Date:</label>
+                                        <input type="date" name="borrow_date" id="borrow_date" required>
+                                        <label for="return_date">Return Date:</label>
+                                        <input type="date" name="return_date" id="return_date" required>
+                                        <input type="submit" value="Borrow">
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No books available at the moment.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </main>
 </body>

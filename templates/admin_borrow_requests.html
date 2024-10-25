@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Borrow Requests</title>
+</head>
+<body>
+    <h1>Borrow Requests</h1>
+    <table>
+        <tr>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Title</th>
+            <th>ISBN</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Action</th>
+        </tr>
+        {% for request in requests %}
+        <tr>
+            <td>{{ request[1] }}</td>
+            <td>{{ request[2] }}</td>
+            <td>{{ request[3] }}</td>
+            <td>{{ request[4] }}</td>
+            <td>{{ request[5] }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('borrow_requests') }}">
+                    <input type="hidden" name="borrow_request_id" value="{{ request[0] }}">
+                    <button type="submit" name="action" value="approve">Approve</button>
+                    <button type="submit" name="action" value="reject">Reject</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

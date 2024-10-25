@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <style>
+       
+        body {
+            font-family: Arial, sans-serif;
+            background-image:url('/static/img/homepage bg.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.4);
+            border: none;
+            padding: 25px;
+            width: 350px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        label {
+            width: 100%;
+            padding: 10px;
+            display: block;
+            font-size: 17px;
+            font-weight: normal;
+            color:white;
+            margin-bottom: -7%;
+
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            box-sizing: border-box;
+
+        }
+
+        input[type="submit"] {
+            background-color: transparent;
+            color: #fff;
+            border:1px solid;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 15px;
+            width: 50%;
+            margin-left: 25%;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #d76908;
+        }
+
+        .link {
+            display: block;
+            margin-left: 17%;
+            margin-top: 50px;
+            margin-bottom: 0;
+            color: #fff;
+            font-size: 15px;
+            
+        }
+
+    </style>
+</head>
+<body>
+    <div class = "container">
+        <h1>Join Us Today!</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages%}
+                    {% if category == 'admin_error'%}
+                        <div class="alert alert-danger">{{message}}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="post" action="{{ url_for('admin_login') }}">
+            <label for="Email">Email</label><br>
+            <input type="Email" name="Email" autocomplete="off" required><br>   
+
+            <label for="Password" autocomplete="off">Password</label><br>
+            <input type="Password" name="Password" required><br><br>
+
+            <input type="submit" value="LOGIN">
+        </form>
+    </div>
+</body>
+</html>

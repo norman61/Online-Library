@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class LibraryApp:
     def __init__(self):
@@ -29,30 +30,22 @@ class LibraryApp:
                 repassword = request.form['repassword']
 
                 cursor = self.mysql.connection.cursor()
-                cursor.execute('SELECT COUNT(*) FROM users WHERE Id = %s', (id,))
-                id_count = cursor.fetchone()[0]
-
                 cursor.execute('SELECT COUNT(*) FROM users WHERE Email = %s', (email,))
                 email_count = cursor.fetchone()[0]
-                cursor.close()
 
-                if id_count > 0:
-                    flash('⚠️ There is already an account.')
-                    return redirect(url_for('signin'))
                 if email_count > 0:
-                    flash('⚠️ Email is already in use.')
+                    flash('⚠️ Email is already in use.', 'error')
                     return redirect(url_for('signin'))
                 if password != repassword:
-                    flash('⚠️ Passwords do not match.')
+                    flash('⚠️ Passwords do not match.', 'error')
                     return redirect(url_for('signin'))
 
-                cursor = self.mysql.connection.cursor()
-                cursor.execute('INSERT INTO users (Id, Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s)',
-                               (name, course, year, email, password))
+                hashed_password = generate_password_hash(password)
+                cursor.execute('INSERT INTO users (Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s)',
+                               (name, course, year, email, hashed_password))
                 self.mysql.connection.commit()
                 cursor.close()
 
-                session['id'] = id
                 flash('✅ Successfully registered! Please log in.', 'success')
                 return redirect(url_for('login'))
 
@@ -65,154 +58,207 @@ class LibraryApp:
                 password = request.form['password']
 
                 cursor = self.mysql.connection.cursor()
-                cursor.execute("SELECT Id is_admin FROM users WHERE Email = %s AND Password = %s", (email, password))
+                cursor.execute("SELECT Id, Password FROM users WHERE Email = %s", (email,))
                 user = cursor.fetchone()
                 cursor.close()
 
-                if user:
+                if user and check_password_hash(user[1], password):
                     session['id'] = user[0]
-                    is_admin = user[0]
                     flash('✅ Successfully logged in!', 'success')
+                    return redirect(url_for('home'))
+                else:
+                    flash('⚠️ Login failed. Please check your credentials.', 'error')
 
-                    if is_admin:
-                        return redirect(url_for('admin_dashboard'))
-                
-                    else:
-                        return redirect(url_for('home'))
-                
-                flash('⚠️Login failed. Please check your credentials.')
-                return redirect(url_for('login'))
-            
             return render_template('login.html')
-
         @self.app.route("/home", methods=['GET', 'POST'])
         def home():
             user_id = session.get('id')
-
             if not user_id:
-                flash('⚠️ Please log in first.')
-                return render_template(url_for('login'))
-            
+                flash('⚠️ Please log in first.', 'error')
+                return redirect(url_for('login'))
+
             cursor = self.mysql.connection.cursor()
             cursor.execute("SELECT Name FROM users WHERE Id = %s", (user_id,))
             user = cursor.fetchone()
 
             if not user:
-                flash('⚠️ User not found.')
-                return render_template(url_for('login'))
-            
+                flash('⚠️ User not found.', 'error')
+                return redirect(url_for('login'))
+
+            # Fetch all books (no status filter)
+            cursor.execute("SELECT Id, ISBN, Title FROM books")
+            available_books = cursor.fetchall()
             cursor.close()
-            
+
             if request.method == "POST":
-                name = request.form["name"]
-                isbn = request.form["isbn"]
-                bdate = request.form["bdate"]
-                rdate = request.form["rdate"]
+                book_id = request.form.get("book_id")
+                borrow_date = request.form.get("borrow_date")
+                return_date = request.form.get("return_date")
+
+                if not all([book_id, borrow_date, return_date]):
+                    flash('⚠️ All fields are required.', 'error')
+                    return redirect(url_for('home'))
 
                 cursor = self.mysql.connection.cursor()
-                cursor.execute('INSERT INTO books (Name, ISBN, Borrow_Date, Return_Date) VALUES (%s, %s, %s, %s, %s, %s)',
-                               (name, isbn, bdate, rdate,))
+                cursor.execute("""INSERT INTO borrowed_books (user_id, book_id, borrow_date, return_date, status)
+                                VALUES (%s, %s, %s, %s, 'approved')""",
+                            (user_id, book_id, borrow_date, return_date))  # Directly set status to approved
+                cursor.execute("UPDATE books SET status = 'borrowed' WHERE Id = %s", (book_id,))
                 self.mysql.connection.commit()
                 cursor.close()
 
-                return redirect(url_for('borrow'))
-            
-            return render_template('home.html', user=user)
+                flash('✅ Book borrowed successfully!', 'success')
+                return redirect(url_for('home'))
+
+            return render_template('home.html', user=user, available_books=available_books)
         
         @self.app.route("/borrow")
         def borrow():
             user_id = session.get('id')
-
             if not user_id:
-                flash('⚠️ Please log in first.')
-                return render_template(url_for('login'))
-            
+                flash('⚠️ Please log in first.', 'error')
+                return redirect(url_for('login'))
+
             cursor = self.mysql.connection.cursor()
-            cursor.execute
-            ("SELECT Name FROM users WHERE Id = %s", user_id,)
+            cursor.execute("SELECT Name FROM users WHERE Id = %s", (user_id,))
             user = cursor.fetchone()
 
             if not user:
-                flash('⚠️ User not found.')
-                return render_template(url_for('login'))
-            cursor.execute("""SELECT ISBN, Borrow_Date, Return_Date 
-                FROM books 
-                WHERE Id = %s 
-                ORDER BY Borrow_Date DESC 
-                LIMIT 1""", (user_id,))
-            books = cursor.fetchone()
+                flash('⚠️ User not found.', 'error')
+                return redirect(url_for('login'))
 
+            # Fetch borrowed books for the user
+            cursor.execute("""
+                SELECT b.Title, b.ISBN, bb.return_date 
+                FROM borrowed_books bb
+                JOIN books b ON bb.book_id = b.id
+                WHERE bb.user_id = %s AND bb.status = 'approved'
+            """, (user_id,))
+            borrowed_books = cursor.fetchall()
             cursor.close()
 
-            return render_template("borrow.html", books=books, user=user)
-        
-        @self.app.route("/borrow_book/<int:book_id>", methods=['GET', 'POST'])
-        def borrow_book(book_id):
-            user_id = session.get('id')
+            return render_template("borrow.html", user=user, borrowed_books=borrowed_books)
 
+
+        @self.app.route("/borrow_book", methods=['POST'])
+        def borrow_book():
+            user_id = session.get('id')
             if not user_id:
+                flash('⚠️ Please log in first.', 'error')
                 return redirect(url_for('login'))
-            
+
+            book_id = request.form['book_id']
+            borrow_date = request.form['borrow_date']
+            return_date = request.form['return_date']
+
             cursor = self.mysql.connection.cursor()
-            cursor.execute("""
-        INSERT INTO borrowed_books (user_id, book_id, borrow_date, return_date)
-        VALUES (%s, %s, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 14 DAY))
-    """, (user_id, book_id))
-            
-            cursor.execute("UPDATE books SET status = 'borrowed' WHERE id = %s", (book_id,))
+            cursor.execute("""INSERT INTO borrowed_books (user_id, book_id, borrow_date, return_date, status)
+                              VALUES (%s, %s, %s, %s, 'pending')""",
+                           (user_id, book_id, borrow_date, return_date))
+            cursor.execute("UPDATE books SET status = 'borrowed' WHERE Id = %s", (book_id,))
             self.mysql.connection.commit()
             cursor.close()
-            
-            flash('Book borrowed successfully!')
+
+            flash('✅ Book borrowed successfully! Approval required.', 'info')
             return redirect(url_for('home'))
 
         @self.app.route('/admin_dashboard')
         def admin_dashboard():
-            user_id = session.get('id')  # Get the user ID from session
-
-            if not user_id:  # If no user ID, redirect to login
-                flash('⚠️ Please log in first.')
+            user_id = session.get('id')
+            if not user_id:
+                flash('⚠️ Please log in first.', 'error')
                 return redirect(url_for('login'))
-            cursor = self.mysql.connection.cursor()
-            cursor.execute("SELECT is_admin FROM users WHERE Id = %s", (user_id,))
-            is_admin = cursor.fetchone()
-            
-            if not is_admin or not is_admin[0]:  # If not admin, redirect to home
-                flash('⚠️ Access denied: Admins only.')
+
+            if not session.get('admin_login'):
+                flash('⚠️ Access denied: Admins only.', 'error')
                 return redirect(url_for('home'))
+
+            cursor = self.mysql.connection.cursor()
             cursor.execute("SELECT Id, Name, Email, Course, Year FROM users")
             users = cursor.fetchall()
 
-    # Fetch all books along with the count of unique borrowers for each book
-            cursor.execute("""SELECT books.id, isbn, COUNT(DISTINCT borrowed_books.user_id) AS borrower_count
-                           FROM books
-                           LEFT JOIN borrowed_books ON books.id = borrowed_books.book_id
-                           GROUP BY books.id""")
-            books_with_borrowers = cursor.fetchall()  # [(book_id, isbn, borrower_count), ...]
+            cursor.execute("""SELECT books.id, books.ISBN, books.Title, 
+                      COUNT(DISTINCT borrowed_books.user_id) AS borrower_count
+                      FROM books
+                      LEFT JOIN borrowed_books ON books.id = borrowed_books.book_id
+                      GROUP BY books.id""")
+            books_with_borrowers = cursor.fetchall()
 
-    # Fetch the list of users who borrowed books and join with user data
-            cursor.execute("""SELECT users.Id, users.Name, isbn, borrowed_books.borrow_date, borrowed_books.return_date
-                           FROM borrowed_books
-                           JOIN users ON borrowed_books.user_id = users.Id
-                           JOIN books ON borrowed_books.book_id = books.id
-                           ORDER BY borrowed_books.borrow_date DESC""")
-            borrowed_books = cursor.fetchall()  # [(user_id, user_name, isbn, borrow_date, return_date), ...]
+            cursor.execute("""SELECT users.Id, users.Name, books.Title AS book_name, borrowed_books.borrow_date, borrowed_books.return_date, borrowed_books.status
+                              FROM borrowed_books
+                              JOIN users ON borrowed_books.user_id = users.Id
+                              JOIN books ON borrowed_books.book_id = books.id
+                              ORDER BY borrowed_books.borrow_date DESC""")
+            borrowed_books = cursor.fetchall()
             cursor.close()
-            
+
             return render_template(
-                'admin_dashboard.html', 
-                users=users, 
-                books=books_with_borrowers, 
-                borrowed_books=borrowed_books)
-        
-        @self.app.route("/borrowing_transactions")
-        def borrowing_transactions():
-            return render_template('borrowing_transactions.html')
+                'admin_dashboard.html',
+                users=users,
+                books=books_with_borrowers,
+                borrowed_books=borrowed_books
+            )
+
+        @self.app.route("/borrowed_books")
+        def borrowed_books():
+            user_id = session.get('id')
+            if not user_id:
+                flash('⚠️ Please log in first.', 'error')
+                return redirect(url_for('login'))
+
+            cursor = self.mysql.connection.cursor()
+            cursor.execute("""SELECT u.Id AS user_id, u.Name AS user_name, b.Title AS book_name, 
+                              bb.borrow_date, bb.return_date, bb.status
+                              FROM borrowed_books bb
+                              JOIN users u ON bb.user_id = u.Id
+                              JOIN books b ON bb.book_id = b.id
+                              ORDER BY bb.borrow_date DESC;""")
+            borrowed_books = cursor.fetchall()
+            cursor.close()
+
+            return render_template('borrowed_books.html', borrowed_books=borrowed_books)
+
+        @self.app.route("/admin/borrow-requests", methods=['GET', 'POST'])
+        def borrow_requests():
+            if not session.get('admin_login'):
+                flash('⚠️ Access denied: Admins only.', 'error')
+                return redirect(url_for('index'))
+
+            cursor = self.mysql.connection.cursor()
+            cursor.execute("""SELECT bb.id, bb.user_id, b.ISBN, u.Name, bb.borrow_date, bb.return_date, bb.status
+                            FROM borrowed_books bb
+                            JOIN users u ON bb.user_id = u.Id
+                            JOIN books b ON bb.book_id = b.id
+                            WHERE bb.status = 'pending'""")
+            requests = cursor.fetchall()
+
+            if request.method == 'POST':
+                request_id = request.form['request_id']  # Get the unique request ID from the form
+                action = request.form['action']
+
+                if action == 'approve':
+                    cursor.execute("""UPDATE borrowed_books 
+                                    SET status = 'approved' 
+                                    WHERE id = %s""",
+                                (request_id,))
+                    flash('✅ Borrowing request approved!', 'success')
+                elif action == 'reject':
+                    cursor.execute("""UPDATE borrowed_books 
+                                    SET status = 'rejected' 
+                                    WHERE id = %s""",
+                                (request_id,))
+                    flash('⚠️ Borrowing request rejected!', 'error')
+
+                self.mysql.connection.commit()
+
+            cursor.close()
+            return render_template('admin_borrow_requests.html', requests=requests)
 
         @self.app.route("/profile")
         def profile():
             user_id = session.get('id')
             if not user_id:
+                flash('⚠️ Please log in first.', 'error')
                 return redirect(url_for('login'))
 
             cursor = self.mysql.connection.cursor()
@@ -230,19 +276,18 @@ class LibraryApp:
                 }
                 return render_template('profile.html', user=user_data)
             else:
-                flash('User not found.')
+                flash('⚠️ User not found.', 'error')
                 return redirect(url_for('login'))
 
         @self.app.route("/update_profile", methods=['GET', 'POST'])
         def update_profile():
             user_id = session.get('id')
-
             if not user_id:
-                flash('Please log in first.')
+                flash('⚠️ Please log in first.', 'error')
                 return redirect(url_for('login'))
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute("Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
+            cursor.execute("SELECT Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
             user = cursor.fetchone()
 
             if request.method == 'POST':
@@ -251,17 +296,18 @@ class LibraryApp:
                 year = request.form['year']
                 email = request.form['email']
 
-                cursor.execute("""
-                    UPDATE users 
-                    SET Id = Name = %s, Course = %s, Year = %s, Email = %s 
-                    WHERE Id = %s
-                """, (name, course, year, email, user_id))
+                if not all([name, course, year, email]):
+                    flash('⚠️ All fields are required.', 'error')
+                    return redirect(url_for('update_profile'))
 
+                cursor.execute("""UPDATE users 
+                                  SET Name = %s, Course = %s, Year = %s, Email = %s 
+                                  WHERE Id = %s""",
+                               (name, course, year, email, user_id))
                 self.mysql.connection.commit()
                 cursor.close()
 
-                session['id'] = id
-                flash('Profile updated successfully.')
+                flash('✅ Profile updated successfully.', 'success')
                 return redirect(url_for('profile'))
 
             cursor.close()
@@ -270,7 +316,41 @@ class LibraryApp:
         @self.app.route("/logout")
         def logout():
             session.clear()
+            flash('✅ Successfully logged out.', 'info')
             return redirect(url_for('index'))
+
+        @self.app.route('/admin_login', methods=['GET', 'POST'])
+        def admin_login():
+            if request.method == 'POST':
+                Email = request.form['Email']
+                Password = request.form['Password']
+
+                if Email == 'admin@gmail.com' and Password == 'admin':
+                    session['admin_login'] = True
+                    return redirect(url_for('admin_dashboard'))
+                else:
+                    flash('⚠️ Incorrect email or password.')
+
+            return render_template('admin_login.html')
+
+        @self.app.route('/admin_logout')
+        def admin_logout():
+            session.pop('admin_login', None)
+            flash('✅ Successfully logged out of admin.', 'info')
+            return redirect(url_for('index'))
+
+        @self.app.route("/approve_user/<int:user_id>", methods=['POST'])
+        def approve_user(user_id):
+            cursor = self.mysql.connection.cursor()
+            # Example logic to approve a user, assuming you want to update borrowed_books
+            cursor.execute("""UPDATE borrowed_books 
+                            SET status = 'approved' 
+                            WHERE user_id = %s""", (user_id,))
+            self.mysql.connection.commit()
+            cursor.close()
+
+            flash('✅ User borrowing request approved!', 'success')
+            return redirect(url_for('admin_dashboard'))
 
     def run(self):
         self.app.run(debug=True)

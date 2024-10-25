@@ -2,141 +2,189 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <style> 
+    <style>
         body {
-            background-image: url('/static/img/lib bg.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
             font-family: Arial, sans-serif;
-            height: 100vh;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            padding: 0;
+            background-color: #f4f4f4;
         }
 
         header {
-            width: 100%;
-            height: 100px;
-            position: absolute;
-            top: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.6);
-            box-shadow: 0 4px 8px 0 #fff;
-            z-index: 1000;
-            border-radius: 3px;
+            background: #35424a;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
             padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        h1, h2 {
+            margin: 0;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background-color: #c7d3d2;
-            border-radius: 8px;
         }
 
-        table tr,
-        table th,
-        table td {
-            padding: 12px;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-            text-align: left; 
+        table, th, td {
+            border: 1px solid #dddddd;
         }
 
-        table th {
-            background-color: black;
-            box-shadow: 0 3px 3px 0 white;
-            color: white;
-            font-weight: bold;
+        th, td {
+            padding: 10px;
+            text-align: left;
         }
-        
-        table td:last-child {
+
+        th {
+            background: #f2f2f2;
+        }
+
+        footer {
             text-align: center;
+            padding: 10px;
+            background: #35424a;
+            color: #ffffff;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
 
+        button {
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
     <header>
-    <h1>Welcome to Admin Dashboard</h1>
-    
-    <h2>All Registered Users</h2>
-
-<h2>Users List</h2>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
     </header>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Course</th>
-        <th>Year</th>
-    </tr>
-    {% for user in users %}
-    <tr>
-        <td>{{ user[0] }}</td>
-        <td>{{ user[1] }}</td>
-        <td>{{ user[2] }}</td>
-        <td>{{ user[3] }}</td>
-        <td>{{ user[4] }}</td>
-    </tr>
-    {% endfor %}
-</table>
 
-<header>
-<h2>Books with Borrowers Count</h2>
-</header>
+    <main>
+        <section>
+            <h2>User Lists</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>Year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                        <td>{{ user[2] }}</td>
+                        <td>{{ user[3] }}</td>
+                        <td>{{ user[4] }}</td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
 
-<table border="1">
-    <tr>
-        <th>#</th>
-        <th>ID</th>
-        <th>Name</th>
-        <th>ISBN</th>
-        <th>Borrow Date</th>
-        <th>Return Date</th>
-        <th>Status</th>
-        <th>Request</th>
-        <th>Borrower Count</th>
-    </tr>
-    {% for book in books %}
-    <tr>
-        <td>{{ book[0] }}</td>
-        <td>{{ book[1] }}</td>
-        <td>{{ book[2] }}</td>
-        <td>{{ book[3] }}</td>
-    </tr> 
-    {% endfor %}
-</table>
+        <section>
+            <h2>Books Borrowing Overview</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ISBN</th>
+                        <th>Title</th>
+                        <th>Borrower Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{ book[0] }}</td>
+                        <td>{{ book[1] }}</td>
+                        <td>{{ book[2] }}</td>
+                        <td>{{ book[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
 
-<header>
-<h2>Borrowed Books Details</h2>
-</header>
+        <section>
+            <h2>Borrowed Books</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Title</th>  
+                        <th>Borrow Date</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for borrowed_book in borrowed_books %}
+                    <tr>
+                        <td>{{ borrowed_book[0] }}</td>
+                        <td>{{ borrowed_book[1] }}</td>
+                        <td>{{ borrowed_book[2] }}</td>
+                        <td>{{ borrowed_book[3] }}</td>
+                        <td>{{ borrowed_book[4] }}</td>
+                        <td>{{ borrowed_book[5] }}</td>
+                        <td>
+                            {% if borrowed_book[5] == 'pending' %}
+                            <form method="POST" action="{{ url_for('approve_user', user_id=borrowed_book[0]) }}">
+                                <button type="submit" name="action" value="approve">Approve</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
 
-<table border="1">
-    <tr>
-        <th>User ID</th>
-        <th>User Name</th>
-        <th>ISBN</th>
-        <th>Borrow Date</th>
-        <th>Return Date</th>
-    </tr>
-    {% for record in borrowed_books %}
-    <tr>
-        <td>{{ record[0] }}</td>
-        <td>{{ record[1] }}</td>
-        <td>{{ record[2] }}</td>
-        <td>{{ record[3] }}</td>
-        <td>{{ record[4] }}</td>
-    </tr>
-    {% endfor %}
-</table>
-
-
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <footer>
+        <p>&copy; 2024 Library Management System</p>
+    </footer>
 </body>
 </html>
