@@ -3,56 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Borrowed Books</title>
+    <title>User Borrowed Book Transactions</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: rgba(255, 69, 0, 0.1);
             color: #333;
-            padding: 50px;
+            padding: 0;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         h2 {
             font-size: 28px;
-            margin-bottom: 20px;
+            margin: 40px 0;
+            display: block;
         }
         table {
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 20px;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         th, td {
-            padding: 15px;
-            text-align: left;
+            padding: 20px;
+            text-align: center;
             border-bottom: 1px solid #ddd;
+            width: 150px;
         }
         th {
             background-color: rgba(255, 69, 0, 1);
             color: white;
         }
+        td:nth-child(3) {
+            font-size: 15px;
+        }
         tr:hover {
             background-color: rgba(255, 69, 0, 0.2);
         }
-        .button {
-            margin-top: 20px;
+        .action-buttons {
+            display: flex;
+            gap: 10px;
         }
         button {
             padding: 12px 20px;
-            font-size: 18px;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
             background-color: rgba(255, 69, 0, 1);
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: color 0.3s ease;
+            margin-top: 20px;
+            text-align: center;
         }
+
         button:hover {
             background-color: white;
             color: rgba(255, 69, 0, 1);
@@ -64,24 +74,25 @@
 <body>
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
-            var text = 'Here are the details of the book you are requesting to borrow. Kindly wait for the librarian\'s response and your library card. Happy Reading!';
-            var msg = new SpeechSynthesisUtterance();
+            var text = 'Here are the details of the book you are requesting to borrow. Kindly wait for the librarian\'s approval. Happy Reading!';
+            var msg = new SpeechSynthesisUtterance(text);
             var voices = window.speechSynthesis.getVoices();
-            msg.voice = voices[1]; // Adjust as necessary
+            msg.voice = voices[1];
             msg.rate = 1;
             msg.pitch = 1; 
-            msg.text = text;
             window.speechSynthesis.speak(msg);
         });
     </script>
 
-    <h2>Your Borrowed Books</h2>
+    <h2>Borrowed Book Transactions</h2>
     <table>
         <thead>
             <tr>
-                <th>Title</th>
                 <th>ISBN</th>
+                <th>Title</th>
+                <th>Borrow Date</th>
                 <th>Return Date</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -91,36 +102,31 @@
                     <td>{{ book[1] }}</td>
                     <td>{{ book[2] }}</td>
                     <td>{{ book[3] }}</td>
+                    <td>{{ book[4] }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <form action="{{ url_for('update_book', book_id=book[0]) }}" method="GET">
+                                <button type="submit">Update Book</button>
+                            </form>
+                            <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+                                <button type="submit">Delete Book</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="3">No books borrowed.</td>
+                    <td colspan="5">No books borrowed.</td>
                 </tr>
             {% endif %}
         </tbody>
     </table>
 
-    {% if borrowed_books %}
-    {% for book in borrowed_books %}
-    <div>
-        <h3>{{ book[1] }} (ISBN: {{ book[2] }})</h3>
-        <p>Return Date: {{ book[3] }}</p>
-        <form action="{{ url_for('return_book', book_id=book[0]) }}" method="POST">
-            <button type="submit">Return Book</button>
-        </form>
-        <form action="{{ url_for('update_book', book_id=book[0]) }}" method="GET">
-            <button type="submit">Update Book</button>
-        </form>
-        <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
-            <button type="submit">Delete Book</button>
-        </form>
-    </div>
-    {% endfor %}
-    {% endif %}
     <h2>Happy Reading!</h2>
     <div class="button">
         <a href="/home"><button>Done</button></a>
+        <a href="/home"><button>Back to Dashboard</button></a>
     </div>
 </body>
 </html>

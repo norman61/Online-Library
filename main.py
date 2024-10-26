@@ -15,6 +15,9 @@ class LibraryApp:
         #Application routes
         self._setup_routes()
 
+    def get_db_connection(self):
+            return self.mysql.connection
+
     def _setup_routes(self):
         #Home page route
         @self.app.route("/")
@@ -153,32 +156,43 @@ class LibraryApp:
                 flash('Please log in first.')
                 return redirect(url_for('login'))
 
-            cursor = self.mysql.connection.cursor()
-            cursor.execute("SELECT Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
-            user = cursor.fetchone()
+            with self.mysql.connection.cursor() as cursor:
+                cursor.execute("SELECT Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
+                user = cursor.fetchone()
 
-            if request.method == 'POST':
-                name = request.form['name']
-                course = request.form['course']
-                year = request.form['year']
-                email = request.form['email']
+                if not user:
+                    flash('User not found.')
+                    return redirect(url_for('profile'))
 
-                if not all([name, course, year, email]):
-                    flash('All fields are required.')
-                    return redirect(url_for('update_profile'))
+                if request.method == 'POST':
+                    name = request.form['name']
+                    course = request.form['course']
+                    year = request.form['year']
+                    email = request.form['email']
+                    print(f"Debug: Name: {name}, Course: {course}, Year: {year}, Email: {email}")
 
-                cursor.execute("""UPDATE users 
-                                  SET Name = %s, Course = %s, Year = %s, Email = %s 
-                                  WHERE Id = %s""",
-                               (name, course, year, email, user_id))
-                self.mysql.connection.commit()
-                cursor.close()
+                    if not all([name, course, year, email]):
+                        flash('All fields are required.')
+                        return redirect(url_for('update_profile'))
 
-                flash('Profile updated successfully.')
-                return redirect(url_for('profile'))
+                    try:
+                        cursor.execute("""UPDATE users 
+                                        SET Name = %s, Course = %s, Year = %s, Email = %s 
+                                        WHERE Id = %s""",
+                                    (name, course, year, email, user_id))
+                        self.mysql.connection.commit()
+                        flash('Profile updated successfully.')
+                        return redirect(url_for('profile'))
+                    except Exception as e:
+                        flash(f'An error occurred while updating the profile: {str(e)}')
+                        return redirect(url_for('update_profile'))
 
-            cursor.close()
-            return render_template('update_profile.html', user=user)
+            return render_template('update_profile.html', user={
+                'name': user[0],
+                'course': user[1],
+                'year': user[2],
+                'email': user[3]
+            })
 
         #Borrowing a book route
         @self.app.route("/borrow_book", methods=['POST'])
@@ -222,10 +236,10 @@ class LibraryApp:
                     return redirect(url_for('login'))
 
                 #Fetch borrowed books for the user
-                cursor.execute("""SELECT b.id, b.Title, b.ISBN, bb.return_date 
-                                  FROM borrowed_books bb
-                                  JOIN books b ON bb.book_id = b.id
-                                  WHERE bb.user_id = %s AND bb.status = 'approved'""", (user_id,))
+                cursor.execute("""SELECT b.id, b.ISBN, b.Title, bb.borrow_date, bb.return_date 
+                  FROM borrowed_books bb
+                  JOIN books b ON bb.book_id = b.id
+                  WHERE bb.user_id = %s AND bb.status = 'approved'""", (user_id,))
                 borrowed_books = cursor.fetchall()
             except Exception as e:
                 flash(f'An error occurred: {str(e)}')
@@ -240,24 +254,6 @@ class LibraryApp:
         def approval():
             return render_template('approval.html')
 
-        #Return date for borrowing a book route
-        @self.app.route("/return/<int:book_id>", methods=["POST"])
-        def return_book(book_id):
-            user_id = session.get('id')
-            if not user_id:
-                flash('Please log in first.')
-                return redirect(url_for('login'))
-
-            with self.mysql.connection.cursor() as cursor:
-                cursor.execute("""UPDATE borrowed_books 
-                                  SET status = 'returned' 
-                                  WHERE book_id = %s AND user_id = %s""", (book_id, user_id))
-                cursor.execute("UPDATE books SET status = 'available' WHERE Id = %s", (book_id,))
-                self.mysql.connection.commit()
-
-            flash('Book returned successfully!')
-            return redirect(url_for('borrow'))
-
         #Updating a borrowed book route
         @self.app.route("/update/<int:book_id>", methods=["GET", "POST"])
         def update_book(book_id):
@@ -269,7 +265,8 @@ class LibraryApp:
             if request.method == "POST":
                 new_book_id = request.form.get('new_book_id')
 
-                with self.mysql.connection.cursor() as cursor:
+                with self.get_db_connection().cursor() as cursor:
+                    # Check if the selected book is available
                     cursor.execute("SELECT COUNT(*) FROM books WHERE Id = %s AND status = 'available'", (new_book_id,))
                     available_count = cursor.fetchone()[0]
 
@@ -277,25 +274,30 @@ class LibraryApp:
                         flash('The selected book is not available.')
                         return redirect(url_for('update_book', book_id=book_id))
 
+                    # Update the borrowed book
                     cursor.execute("""UPDATE borrowed_books 
-                                      SET book_id = %s 
-                                      WHERE id = %s AND user_id = %s""",
-                                   (new_book_id, book_id, user_id))
+                                    SET book_id = %s 
+                                    WHERE id = %s AND user_id = %s""",
+                                (new_book_id, book_id, user_id))
                     self.mysql.connection.commit()
 
                 flash('Book changed successfully!')
                 return redirect(url_for('borrow'))
 
-            #Fetch current book and available books for the dropdown
-            with self.mysql.connection.cursor() as cursor:
+            # Fetch the current book and available books for the form
+            with self.get_db_connection().cursor() as cursor:
                 cursor.execute("""SELECT b.Id, b.Title, bb.return_date 
-                                  FROM borrowed_books bb 
-                                  JOIN books b ON bb.book_id = b.Id 
-                                  WHERE bb.id = %s AND bb.user_id = %s""", (book_id, user_id))
+                                FROM borrowed_books bb 
+                                JOIN books b ON bb.book_id = b.Id 
+                                WHERE bb.id = %s AND bb.user_id = %s""", (book_id, user_id))
                 current_book = cursor.fetchone()
 
                 cursor.execute("SELECT Id, Title FROM books WHERE status = 'available'")
                 available_books = cursor.fetchall()
+
+            if not current_book:
+                flash('No borrowed book found.')
+                return redirect(url_for('borrow'))
 
             return render_template("update_book.html", current_book=current_book, available_books=available_books)
 
@@ -449,6 +451,6 @@ class LibraryApp:
     def run(self):
         self.app.run(debug=True)
 
-if __name__ == "___main___":
+if __name__ == "__main__":
     library_app = LibraryApp()
     library_app.run()

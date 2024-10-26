@@ -96,35 +96,38 @@
         <form action="/update_profile" method="post">
             <a href="profile"><button style="font-size: 16px; border: 1px solid white;">&#8592; back</button></a>
             <h1>Your Profile</h1>
-            
-            <label for="name">ID:</label>
-            <input type="text" name="id" id="id" value="{{ user[0] }}" required>
-
+    
             <label for="name">Name:</label>
-            <input type="text" name="name" id="name" value="{{ user[1] }}" required>
-
+            <input type="text" name="name" id="name" value="{{ user.name }}" required>
+    
             <label for="course">Course:</label>
-            <input type="text" name="course" id="course" value="{{ user[2] }}" required>
-
+            <input type="text" name="course" id="course" value="{{ user.course }}" required>
+    
             <label for="year">Year:</label>
             <select name="year" id="year" required>
                 <option value="">--SELECT--</option>
-                <option value="First Year">1st Year</option>
-                <option value="Second Year">2nd Year</option>
-                <option value="Third Year">3rd Year</option>
-                <option value="Fourth Year">4th Year</option>
-            </select><br>
-
+                <option value="First Year" {% if user.year == "First Year" %}selected{% endif %}>1st Year</option>
+                <option value="Second Year" {% if user.year == "Second Year" %}selected{% endif %}>2nd Year</option>
+                <option value="Third Year" {% if user.year == "Third Year" %}selected{% endif %}>3rd Year</option>
+                <option value="Fourth Year" {% if user.year == "Fourth Year" %}selected{% endif %}>4th Year</option>
+            </select>
+    
             <label for="email">Email:</label>
-            <input type="email" name="email" id="email" value="{{ user[4] }}" required>
-
-            
-
+            <input type="email" name="email" id="email" value="{{ user.email }}" required>
+    
             <input type="submit" value="Update Profile">
         </form>
         <div class="button">
-            <a href="/home"><button>Home</button></a>
         </div>
+    
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     </div>
-</body>
-</html>
+    

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <style>
+    <style> 
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -13,10 +13,17 @@
         }
 
         header {
-            background: #35424a;
+            background: rgba(238, 115, 44, 1);
             color: #ffffff;
-            padding: 20px;
+            padding: 40px;
             text-align: center;
+            position: relative;
+        }
+
+        nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
 
         nav ul {
@@ -32,6 +39,20 @@
         nav ul li a {
             color: #ffffff;
             text-decoration: none;
+            border: 1px solid white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            font-size: large;
+            background-color: transparent;
+            line-height: 6;
+            
+        }
+
+        nav ul li a:hover {
+            background-color: white;
+            color: #d76908;
+            border: 1px solid white;
         }
 
         h1, h2 {
@@ -47,7 +68,7 @@
             background: white;
             padding: 15px;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         table {
@@ -71,7 +92,7 @@
         footer {
             text-align: center;
             padding: 10px;
-            background: #35424a;
+            background: rgba(238, 115, 44, 1); 
             color: #ffffff;
             position: relative;
             bottom: 0;
@@ -80,12 +101,23 @@
 
         button {
             margin: 5px;
+            background-color: #d76908; 
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #c65d07; 
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Admin Dashboard</h1>
+        <h1>Welcome to Admin Dashboard!</h1>
         <nav>
             <ul>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
@@ -114,7 +146,6 @@
                         <td>{{ user[2] }}</td>
                         <td>{{ user[3] }}</td>
                         <td>{{ user[4] }}</td>
-                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -183,7 +214,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2024 Library Management System</p>
+        <p>&copy; 2024 Tech-Library System</p>
     </footer>
 </body>
 </html>
