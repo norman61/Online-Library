@@ -70,6 +70,7 @@ class LibraryApp:
                     flash('⚠️ Login failed. Please check your credentials.', 'error')
 
             return render_template('login.html')
+
         @self.app.route("/home", methods=['GET', 'POST'])
         def home():
             user_id = session.get('id')
@@ -86,7 +87,7 @@ class LibraryApp:
                 return redirect(url_for('login'))
 
             # Fetch all books (no status filter)
-            cursor.execute("SELECT Id, ISBN, Title FROM books")
+            cursor.execute("SELECT Id, ISBN, Title FROM books WHERE status = 'available'")
             available_books = cursor.fetchall()
             cursor.close()
 
@@ -111,7 +112,7 @@ class LibraryApp:
                 return redirect(url_for('home'))
 
             return render_template('home.html', user=user, available_books=available_books)
-        
+
         @self.app.route("/borrow")
         def borrow():
             user_id = session.get('id')
@@ -120,22 +121,26 @@ class LibraryApp:
                 return redirect(url_for('login'))
 
             cursor = self.mysql.connection.cursor()
-            cursor.execute("SELECT Name FROM users WHERE Id = %s", (user_id,))
-            user = cursor.fetchone()
+            try:
+                # Fetch user information
+                cursor.execute("SELECT Name FROM users WHERE Id = %s", (user_id,))
+                user = cursor.fetchone()
 
-            if not user:
-                flash('⚠️ User not found.', 'error')
-                return redirect(url_for('login'))
+                if not user:
+                    flash('⚠️ User not found.', 'error')
+                    return redirect(url_for('login'))
 
-            # Fetch borrowed books for the user
-            cursor.execute("""
-                SELECT b.Title, b.ISBN, bb.return_date 
-                FROM borrowed_books bb
-                JOIN books b ON bb.book_id = b.id
-                WHERE bb.user_id = %s AND bb.status = 'approved'
-            """, (user_id,))
-            borrowed_books = cursor.fetchall()
-            cursor.close()
+                # Fetch borrowed books for the user, including the book ID
+                cursor.execute("""SELECT b.id, b.Title, b.ISBN, bb.return_date 
+                                FROM borrowed_books bb
+                                JOIN books b ON bb.book_id = b.id
+                                WHERE bb.user_id = %s AND bb.status = 'approved'""", (user_id,))
+                borrowed_books = cursor.fetchall()
+            except Exception as e:
+                flash(f'⚠️ An error occurred: {str(e)}', 'error')
+                return redirect(url_for('home'))
+            finally:
+                cursor.close()
 
             return render_template("borrow.html", user=user, borrowed_books=borrowed_books)
 
@@ -351,6 +356,83 @@ class LibraryApp:
 
             flash('✅ User borrowing request approved!', 'success')
             return redirect(url_for('admin_dashboard'))
+
+        @self.app.route("/return/<int:book_id>", methods=["POST"])
+        def return_book(book_id):
+            user_id = session.get('id')
+            if not user_id:
+                flash('⚠️ Please log in first.', 'error')
+                return redirect(url_for('login'))
+
+            with self.mysql.connection.cursor() as cursor:
+                cursor.execute("""UPDATE borrowed_books 
+                                  SET status = 'returned' 
+                                  WHERE book_id = %s AND user_id = %s""", (book_id, user_id))
+                cursor.execute("UPDATE books SET status = 'available' WHERE Id = %s", (book_id,))
+                self.mysql.connection.commit()
+
+            flash('✅ Book returned successfully!', 'success')
+            return redirect(url_for('borrow'))
+
+        @self.app.route("/update/<int:book_id>", methods=["GET", "POST"])
+        def update_book(book_id):
+            user_id = session.get('id')
+            if not user_id:
+                flash('⚠️ Please log in first.', 'error')
+                return redirect(url_for('login'))
+
+            if request.method == "POST":
+                new_book_id = request.form.get('new_book_id')
+
+                with self.mysql.connection.cursor() as cursor:
+                    cursor.execute("SELECT COUNT(*) FROM books WHERE Id = %s AND status = 'available'", (new_book_id,))
+                    available_count = cursor.fetchone()[0]
+
+                    if available_count == 0:
+                        flash('⚠️ The selected book is not available.', 'error')
+                        return redirect(url_for('update_book', book_id=book_id))
+
+                    cursor.execute("""UPDATE borrowed_books 
+                                      SET book_id = %s 
+                                      WHERE id = %s AND user_id = %s""",
+                                   (new_book_id, book_id, user_id))
+                    self.mysql.connection.commit()
+
+                flash('✅ Book changed successfully!', 'success')
+                return redirect(url_for('borrow'))
+
+            # Fetch current book and available books for the dropdown
+            with self.mysql.connection.cursor() as cursor:
+                cursor.execute("""SELECT b.Id, b.Title, bb.return_date 
+                                  FROM borrowed_books bb 
+                                  JOIN books b ON bb.book_id = b.Id 
+                                  WHERE bb.id = %s AND bb.user_id = %s""", (book_id, user_id))
+                current_book = cursor.fetchone()
+
+                cursor.execute("SELECT Id, Title FROM books WHERE status = 'available'")
+                available_books = cursor.fetchall()
+
+            return render_template("update_book.html", current_book=current_book, available_books=available_books)
+
+        @self.app.route("/delete/<int:book_id>", methods=["POST"])
+        def delete_book(book_id):
+            user_id = session.get('id')
+            if not user_id:
+                flash('⚠️ Please log in first.', 'error')
+                return redirect(url_for('login'))
+
+            with self.mysql.connection.cursor() as cursor:
+                cursor.execute("""DELETE FROM borrowed_books 
+                                  WHERE book_id = %s AND user_id = %s""", (book_id, user_id))
+                cursor.execute("UPDATE books SET status = 'available' WHERE Id = %s", (book_id,))
+                self.mysql.connection.commit()
+
+            flash('✅ Book deleted successfully!', 'success')
+            return redirect(url_for('borrow'))
+
+        @self.app.route('/borrowedbook')
+        def borrowedbook():
+            return render_template('borrowedbook.html')
 
     def run(self):
         self.app.run(debug=True)

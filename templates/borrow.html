@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: rgba(255, 69, 0, 0.1); /* orangered with opacity */
+            background-color: rgba(255, 69, 0, 0.1);
             color: #333;
             padding: 50px;
             margin: 0;
@@ -15,12 +15,10 @@
             flex-direction: column;
             align-items: center;
         }
-    
         h2 {
             font-size: 28px;
             margin-bottom: 20px;
         }
-    
         table {
             width: 100%;
             max-width: 600px;
@@ -30,26 +28,21 @@
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-    
         th, td {
             padding: 15px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
-    
         th {
             background-color: rgba(255, 69, 0, 1);
             color: white;
         }
-    
         tr:hover {
             background-color: rgba(255, 69, 0, 0.2);
         }
-    
         .button {
             margin-top: 20px;
         }
-    
         button {
             padding: 12px 20px;
             font-size: 18px;
@@ -60,7 +53,6 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.2s;
         }
-    
         button:hover {
             background-color: white;
             color: rgba(255, 69, 0, 1);
@@ -68,8 +60,6 @@
             border: 2px solid rgba(255, 69, 0, 1);
         }
     </style>
-    
-    
 </head>
 <body>
     <script>
@@ -98,9 +88,9 @@
             {% if borrowed_books %}
                 {% for book in borrowed_books %}
                 <tr>
-                    <td>{{ book[0] }}</td>
                     <td>{{ book[1] }}</td>
                     <td>{{ book[2] }}</td>
+                    <td>{{ book[3] }}</td>
                 </tr>
                 {% endfor %}
             {% else %}
@@ -111,8 +101,24 @@
         </tbody>
     </table>
 
+    {% if borrowed_books %}
+    {% for book in borrowed_books %}
+    <div>
+        <h3>{{ book[1] }} (ISBN: {{ book[2] }})</h3>
+        <p>Return Date: {{ book[3] }}</p>
+        <form action="{{ url_for('return_book', book_id=book[0]) }}" method="POST">
+            <button type="submit">Return Book</button>
+        </form>
+        <form action="{{ url_for('update_book', book_id=book[0]) }}" method="GET">
+            <button type="submit">Update Book</button>
+        </form>
+        <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
+            <button type="submit">Delete Book</button>
+        </form>
+    </div>
+    {% endfor %}
+    {% endif %}
     <h2>Happy Reading!</h2>
-
     <div class="button">
         <a href="/home"><button>Done</button></a>
     </div>

@@ -26,7 +26,6 @@
                 <form method="POST" action="{{ url_for('borrow_requests') }}">
                     <input type="hidden" name="borrow_request_id" value="{{ request[0] }}">
                     <button type="submit" name="action" value="approve">Approve</button>
-                    <button type="submit" name="action" value="reject">Reject</button>
                 </form>
             </td>
         </tr>
