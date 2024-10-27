@@ -15,9 +15,6 @@ class LibraryApp:
         #Application routes
         self._setup_routes()
 
-    def get_db_connection(self):
-            return self.mysql.connection
-
     def _setup_routes(self):
         #Home page route
         @self.app.route("/")
@@ -253,53 +250,6 @@ class LibraryApp:
         @self.app.route('/approval')
         def approval():
             return render_template('approval.html')
-
-        #Updating a borrowed book route
-        @self.app.route("/update/<int:book_id>", methods=["GET", "POST"])
-        def update_book(book_id):
-            user_id = session.get('id')
-            if not user_id:
-                flash('Please log in first.')
-                return redirect(url_for('login'))
-
-            if request.method == "POST":
-                new_book_id = request.form.get('new_book_id')
-
-                with self.get_db_connection().cursor() as cursor:
-                    # Check if the selected book is available
-                    cursor.execute("SELECT COUNT(*) FROM books WHERE Id = %s AND status = 'available'", (new_book_id,))
-                    available_count = cursor.fetchone()[0]
-
-                    if available_count == 0:
-                        flash('The selected book is not available.')
-                        return redirect(url_for('update_book', book_id=book_id))
-
-                    # Update the borrowed book
-                    cursor.execute("""UPDATE borrowed_books 
-                                    SET book_id = %s 
-                                    WHERE id = %s AND user_id = %s""",
-                                (new_book_id, book_id, user_id))
-                    self.mysql.connection.commit()
-
-                flash('Book changed successfully!')
-                return redirect(url_for('borrow'))
-
-            # Fetch the current book and available books for the form
-            with self.get_db_connection().cursor() as cursor:
-                cursor.execute("""SELECT b.Id, b.Title, bb.return_date 
-                                FROM borrowed_books bb 
-                                JOIN books b ON bb.book_id = b.Id 
-                                WHERE bb.id = %s AND bb.user_id = %s""", (book_id, user_id))
-                current_book = cursor.fetchone()
-
-                cursor.execute("SELECT Id, Title FROM books WHERE status = 'available'")
-                available_books = cursor.fetchall()
-
-            if not current_book:
-                flash('No borrowed book found.')
-                return redirect(url_for('borrow'))
-
-            return render_template("update_book.html", current_book=current_book, available_books=available_books)
 
         #Deleting a borrowed book route
         @self.app.route("/delete/<int:book_id>", methods=["POST"])

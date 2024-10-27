@@ -4,18 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Approval</title>
-</head>
-<body>
-    <a href="home"><button class="btn1" id="btn"><b>Back to Dashboard</b></button></a>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enrollment Confirmation</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -25,74 +13,6 @@
             color: #000; 
         }
 
-        .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            z-index: 0;
-        }
-
-        h1 {
-            color: #0f5132; 
-            margin-bottom: 20px;
-            font-size: 2.5em;
-            font-weight: bold; 
-            position: relative;
-            z-index: 1;
-        }
-
-        .confirmation-message {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            font-weight: bold; 
-            position: relative;
-            z-index: 1;
-        }
-
-        p {
-            line-height: 1.6;
-            margin: 10px 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        strong {
-            color: #0f5132; 
-            font-weight: bold; 
-        }
-
-        .screenshot-note {
-            margin-top: 30px;
-            font-weight: bold; 
-            font-size: 1.1em;
-            position: relative;
-            z-index: 1;
-        }
-
-        .footer {
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #6c757d;
-        }
-
-        /* Modal Styles */
         .modal {
             display: none; /* Hidden by default */
             position: fixed; 
@@ -107,7 +27,7 @@
 
         .modal-content {
             background-color: #fefefe;
-            margin: 10% auto; 
+            margin: 15% auto; 
             padding: 20px;
             border: 1px solid #888;
             width: 80%; 
@@ -131,9 +51,7 @@
             cursor: pointer;
         }
 
-        .home-button,
-        #screenshotBtn {
-            margin: 20px 10px; /* Spacing between buttons */
+        .btn1 {
             padding: 10px 20px;
             background-color: #0f5132; 
             color: white;
@@ -142,90 +60,43 @@
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.3s; /* Smooth transition for hover effect */
-            text-decoration: none; /* Remove underline for the link */
-            display: inline-block; /* Ensure it behaves like a button */
         }
 
-        .home-button:hover,
-        #screenshotBtn:hover {
+        .btn1:hover {
             background-color: #0b3d24; 
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-
-            .confirmation-message {
-                font-size: 1em;
-            }
-
-            .screenshot-note {
-                font-size: 1em;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <h1>Welcome to Pre-Enrollment Registration System</h1>
-        <p>This system allows students to register for courses and administrators to manage the registration process.</p>
-        <h2>Requirements for Enrollment</h2>
-        <ul>
-            <li>Original Report Card</li>
-            <li>Photocopy of PSA Birth Certificate</li>
-            <li>2 pieces 1x1 picture (folder with picture in the center)</li>
-        </ul>
-    </div>
-    <div class="container">
-        <h1>Enrollment Confirmation</h1>
-        <p class="confirmation-message">Your enrollment requirements have been successfully submitted! Please wait for confirmation from the Admissions Office. Thank you for choosing PHINMA University of Iloilo.</p>
-        <p>If you have any inquiries, please do not hesitate to reach out to the Admissions Office at <strong>(+63) 9512241647</strong> or via email at <strong>admissions@phinma.edu.ph</strong>. We are here to assist you.</p>
-        
-        <!-- Button to open the modal -->
-        <button id="screenshotBtn" class="screenshot-note">DONE</button>
-
-        <p>
-            <a class="home-button" href="{{ url_for('home') }}">Home Page</a>
-        </p>
-        
-        <!-- Modal -->
-        <div id="screenshotModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>Please screenshot this letter to have proof that you have really enrolled.</p>
-                <p class="bottom"><a class="home-button" href="{{ url_for('home') }}">Home Page</a></p>
-            </div>
+    <h1>Book Borrowing</h1>
+    <p>Click the button below to borrow a book.</p>
+    
+    <button id="borrowBookBtn" class="btn1">Borrow Book</button>
+    
+    <div id="borrowModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Book borrowed successfully! Approval required.</p>
         </div>
-
-        <div class="footer">© 2024 PHINMA University of Iloilo. All rights reserved.</div>
     </div>
+    
+    <a href="home"><button class="btn1"><b>Back to Dashboard</b></button></a>
 
     <script>
-        // Get the modal
-        var modal = document.getElementById("screenshotModal");
+        var modal = document.getElementById("borrowModal");
 
-        // Get the button that opens the modal
-        var btn = document.getElementById("screenshotBtn");
+        var borrowBtn = document.getElementById("borrowBookBtn");
 
-        // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
 
-        // When the user clicks the button, open the modal 
-        btn.onclick = function() {
+        borrowBtn.onclick = function() {
             modal.style.display = "block";
         }
 
-        // When the user clicks on <span> (x), close the modal
         span.onclick = function() {
             modal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
