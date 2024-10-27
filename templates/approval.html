@@ -7,14 +7,24 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #e9ecef, #d1e7dd);
+            background: linear-gradient(to right, #ffffff, #f8f9fa);
             margin: 0;
             padding: 20px;
             color: #000; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #ff7f50;
+            margin-bottom: 20px;
         }
 
         .modal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed; 
             z-index: 1000; 
             left: 0;
@@ -22,85 +32,74 @@
             width: 100%; 
             height: 100%; 
             overflow: auto; 
-            background-color: rgba(0, 0, 0, 0.7); /* Darker background */
+            background-color: rgba(0, 0, 0, 0.7);
+            opacity: 0; 
+            transition: opacity 0.5s ease;
+        }
+
+        .modal.show {
+            display: block; 
+            opacity: 1; 
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: white; 
             margin: 15% auto; 
             padding: 20px;
             border: 1px solid #888;
             width: 80%; 
-            max-width: 400px; /* Adjusted for better visibility */
+            max-width: 400px; 
             border-radius: 10px;
             text-align: center;
         }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 32px; /* Increased size for better clickability */
-            font-weight: bold;
-            margin-left: 10px; /* Space between close button and edge */
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
         .btn1 {
             padding: 10px 20px;
-            background-color: #0f5132; 
+            background-color: #ff7f50;
             color: white;
-            border: none;
+            border: 1px solid white;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1em;
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
         }
 
         .btn1:hover {
-            background-color: #0b3d24; 
+            background-color: white; 
+            color: #ff7f50;
+            border: 1px solid #ff7f50;
         }
     </style>
 </head>
 <body>
     <h1>Book Borrowing</h1>
-    <p>Click the button below to borrow a book.</p>
+    <p>Are you sure you want to borrow this book?</p>
     
     <button id="borrowBookBtn" class="btn1">Borrow Book</button>
     
     <div id="borrowModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <p>Book borrowed successfully! Approval required.</p>
         </div>
     </div>
     
-    <a href="home"><button class="btn1"><b>Back to Dashboard</b></button></a>
+    <a href="home">
+        <button class="btn1"><b>Back to Dashboard</b></button>
+    </a>
 
     <script>
         var modal = document.getElementById("borrowModal");
-
         var borrowBtn = document.getElementById("borrowBookBtn");
 
-        var span = document.getElementsByClassName("close")[0];
-
         borrowBtn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+            modal.classList.add("show");
+            setTimeout(() => {
+                modal.classList.remove("show");
+                setTimeout(() => {
+                    modal.style.display = "none";
+                }, 500);
+            }, 2000);
         }
     </script>
 </body>

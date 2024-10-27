@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User LogIn</title>
     <style>
-       
         body {
             font-family: Arial, sans-serif;
-            background-image:url('/static/img/homepage bg.jpg');
+            background-image: url('/static/img/homepage bg.jpg');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -20,7 +19,6 @@
 
         .container {
             background: rgba(0, 0, 0, 0.4);
-            border: none;
             padding: 25px;
             width: 350px;
             box-sizing: border-box;
@@ -29,7 +27,7 @@
         h1 {
             font-size: 24px;
             color: #fff;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
@@ -39,27 +37,23 @@
             display: block;
             font-size: 17px;
             font-weight: normal;
-            color:white;
+            color: white;
             margin-bottom: -7%;
-
         }
 
-        input[type="text"],
         input[type="email"],
-        input[type="password"],
-        select {
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
             border: none;
             box-sizing: border-box;
-
         }
 
         input[type="submit"] {
             background-color: transparent;
             color: #fff;
-            border:1px solid;
+            border: 1px solid;
             border-radius: 4px;
             padding: 10px;
             font-size: 15px;
@@ -77,26 +71,46 @@
             display: block;
             margin-left: 17%;
             margin-top: 50px;
-            margin-bottom: 0;
             color: #fff;
             font-size: 15px;
-            
         }
 
+        .flash-message {
+            background-color: #4caf4fdc;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 13px;
+            max-width: 400px;
+            margin: 20px auto 0;
+        }
     </style>
 </head>
 <body>
-    <div class = "container">
+    <div class="container">
         <h1>Join Us Today!</h1>
+
         <form action="/login" method="post">
             <label for="email">Email</label><br>
             <input type="email" name="email" autocomplete="off" required><br>   
 
-            <label for="password" autocomplete="off">Password</label><br>
+            <label for="password">Password</label><br>
             <input type="password" name="password" required><br><br>
 
             <input type="submit" value="LOGIN">
         </form>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-message">
+                    {% for category, message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <a class="link" href="/signin">Need an account? Create one!</a>
     </div>
 </body>

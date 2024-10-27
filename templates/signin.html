@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <style>
-
         body {
             font-family: Arial, sans-serif;
-            background-image:url('/static/img/homepage bg.jpg');
+            background-image: url('/static/img/homepage bg.jpg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -21,14 +20,13 @@
 
         .container {
             background: rgba(0, 0, 0, 0.5);
-            border: none;
             padding: 6%;
             width: 200%;
             max-width: 500px;
-            box-sizing: border-box;
             height: 720px;
             margin-top: 80px;
             margin-bottom: -10px;
+            box-sizing: border-box;
         }
 
         h1 {
@@ -45,10 +43,9 @@
             display: block;
             font-weight: normal;
             margin-bottom: -8%;
-            color:white;
+            color: white;
             border-radius: 5px solid;
             box-sizing: border-box;
-            
         }
 
         input[type="text"],
@@ -80,39 +77,60 @@
             background-color: #d76908;
             color: white;
         }
+
+        .flash-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 10px;
+            max-width: 100px;
+            margin: 0 auto 20px;
+        }
     </style>
 </head>
 <body>
-    <div class = "container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-message">
+                {% for category, message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
         <h1>Registration Form</h1>
-    <form action="/signin" method="post">
+        <form action="/signin" method="post">
+            <label for="name">Name</label><br>
+            <input type="text" name="name" required><br>
 
-        <label for="name">Name</label><br>
-        <input type="text" name="name" required><br>
+            <label for="course">Course</label><br>
+            <input type="text" name="course" required><br>
 
-        <label for="course">Course</label><br>
-        <input type="text" name="course" required><br>
+            <label for="year">Year Level</label><br>
+            <select name="year" id="year" required>
+                <option value="">--SELECT--</option>
+                <option value="First Year">1st Year</option>
+                <option value="Second Year">2nd Year</option>
+                <option value="Third Year">3rd Year</option>
+                <option value="Fourth Year">4th Year</option>
+            </select><br>
 
-        <label for="year">Year Level</label><br>
-        <select name="year" id="year" required>
-            <option value="">--SELECT--</option>
-            <option value="First Year">1st Year</option>
-            <option value="Second Year">2nd Year</option>
-            <option value="Third Year">3rd Year</option>
-            <option value="Fourth Year">4th Year</option>
-        </select><br>
+            <label for="email">Email</label><br>
+            <input type="email" name="email" required><br>
 
-        <label for="email">Email</label><br>
-        <input type="email" name="email" required><br>
+            <label for="password">Password</label><br>
+            <input type="password" name="password" required><br>
 
-        <label for="password">Password</label><br>
-        <input type="password" name="password" required><br>
+            <label for="repassword">Confirm Password</label><br>
+            <input type="password" name="repassword" required><br>
 
-        <label for="repassword">Confirm Password</label><br>
-        <input type="password" name="repassword" required><br>
-
-        <input type="submit" value="REGISTER">
+            <input type="submit" value="REGISTER">
+        </form>
     </div>
-    </form>
 </body>
 </html>

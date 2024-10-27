@@ -9,10 +9,9 @@ class LibraryApp:
         self.app.config['MYSQL_HOST'] = 'localhost'
         self.app.config['MYSQL_USER'] = 'root'
         self.app.config['MYSQL_PASSWORD'] = ''
-        self.app.config['MYSQL_DB'] = 'library'
+        self.app.config['MYSQL_DB'] = 'techlibrary'
         self.mysql = MySQL(self.app)
 
-        #Application routes
         self._setup_routes()
 
     def _setup_routes(self):
@@ -25,7 +24,6 @@ class LibraryApp:
         @self.app.route("/signin", methods=['GET', 'POST'])
         def signin():
             if request.method == "POST":
-                #Gather user data from the form
                 name = request.form['name']
                 course = request.form['course']
                 year = request.form['year']
@@ -38,22 +36,23 @@ class LibraryApp:
                 email_count = cursor.fetchone()[0]
 
                 if email_count > 0:
-                    flash('Email is already in use.')
+                    flash('Email is already in use.', 'danger')
                     return redirect(url_for('signin'))
                 if password != repassword:
-                    flash('Passwords do not match.')
+                    flash('Passwords do not match.', 'danger')
                     return redirect(url_for('signin'))
 
                 hashed_password = generate_password_hash(password)
                 cursor.execute('INSERT INTO users (Name, Course, Year, Email, Password) VALUES (%s, %s, %s, %s, %s)',
-                               (name, course, year, email, hashed_password))
+                            (name, course, year, email, hashed_password))
                 self.mysql.connection.commit()
                 cursor.close()
 
-                flash('Successfully registered! Please log in.')
+                flash('Successfully registered! Please log in.', 'success')
                 return redirect(url_for('login'))
 
             return render_template('signin.html')
+
 
         #User login route
         @self.app.route("/login", methods=['GET', 'POST'])
@@ -69,10 +68,10 @@ class LibraryApp:
 
                 if user and check_password_hash(user[1], password):
                     session['id'] = user[0]
-                    flash('Successfully logged in!')
+                    flash('Successfully logged in!', 'success')
                     return redirect(url_for('home'))
                 else:
-                    flash('Login failed. Please check your credentials.')
+                    flash('Login failed. Please check your credentials.', 'danger')
 
             return render_template('login.html')
 
@@ -81,7 +80,7 @@ class LibraryApp:
         def home():
             user_id = session.get('id')
             if not user_id:
-                flash('Please log in first.')
+                flash('Please log in first.', 'warning')
                 return redirect(url_for('login'))
 
             cursor = self.mysql.connection.cursor()
@@ -89,10 +88,9 @@ class LibraryApp:
             user = cursor.fetchone()
 
             if not user:
-                flash('User not found.')
+                flash('User not found.', 'danger')
                 return redirect(url_for('login'))
 
-            #Fetch all available books
             cursor.execute("SELECT Id, ISBN, Title FROM books WHERE status = 'available'")
             available_books = cursor.fetchall()
             cursor.close()
@@ -103,18 +101,18 @@ class LibraryApp:
                 return_date = request.form.get("return_date")
 
                 if not all([book_id, borrow_date, return_date]):
-                    flash('All fields are required.')
+                    flash('All fields are required.', 'warning')
                     return redirect(url_for('home'))
 
                 cursor = self.mysql.connection.cursor()
                 cursor.execute("""INSERT INTO borrowed_books (user_id, book_id, borrow_date, return_date, status)
-                                  VALUES (%s, %s, %s, %s, 'approved')""",
-                               (user_id, book_id, borrow_date, return_date))
+                                VALUES (%s, %s, %s, %s, 'approved')""",
+                            (user_id, book_id, borrow_date, return_date))
                 cursor.execute("UPDATE books SET status = 'borrowed' WHERE Id = %s", (book_id,))
                 self.mysql.connection.commit()
                 cursor.close()
 
-                flash('Book borrowed successfully!')
+                flash('Book borrowed successfully!', 'success')
                 return redirect(url_for('home'))
 
             return render_template('home.html', user=user, available_books=available_books)
@@ -123,6 +121,7 @@ class LibraryApp:
         @self.app.route("/profile")
         def profile():
             user_id = session.get('id')
+            
             if not user_id:
                 flash('Please log in first.')
                 return redirect(url_for('login'))
@@ -141,9 +140,10 @@ class LibraryApp:
                     'email': user[4],
                 }
                 return render_template('profile.html', user=user_data)
-            else:
-                flash('User not found.')
-                return redirect(url_for('login'))
+            
+            flash('User not found.')
+            return redirect(url_for('login'))
+
 
         #Update user profile route
         @self.app.route("/update_profile", methods=['GET', 'POST'])
@@ -154,7 +154,7 @@ class LibraryApp:
                 return redirect(url_for('login'))
 
             with self.mysql.connection.cursor() as cursor:
-                cursor.execute("SELECT Name, Course, Year, Email, Password FROM users WHERE Id = %s", (user_id,))
+                cursor.execute("SELECT Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
                 user = cursor.fetchone()
 
                 if not user:
@@ -167,6 +167,7 @@ class LibraryApp:
                     year = request.form['year']
                     email = request.form['email']
                     password = request.form['password']
+
                     print(f"Debug: Name: {name}, Course: {course}, Year: {year}, Email: {email}, Password: {password}")
 
                     if not all([name, course, year, email]):
@@ -174,10 +175,17 @@ class LibraryApp:
                         return redirect(url_for('update_profile'))
 
                     try:
-                        cursor.execute("""UPDATE users 
-                                        SET Name = %s, Course = %s, Year = %s, Email = %s, Password = %s
-                                        WHERE Id = %s""",
-                                    (name, course, year, email, password, user_id))
+                        if password:
+                            cursor.execute("""UPDATE users 
+                                            SET Name = %s, Course = %s, Year = %s, Email = %s, Password = %s 
+                                            WHERE Id = %s""",
+                                        (name, course, year, email, password, user_id))
+                        else:
+                            cursor.execute("""UPDATE users 
+                                            SET Name = %s, Course = %s, Year = %s, Email = %s 
+                                            WHERE Id = %s""",
+                                        (name, course, year, email, user_id))
+
                         self.mysql.connection.commit()
                         flash('Profile updated successfully.')
                         return redirect(url_for('profile'))
@@ -189,10 +197,9 @@ class LibraryApp:
                 'name': user[0],
                 'course': user[1],
                 'year': user[2],
-                'email': user[3],
-                'password': user[4],
+                'email': user[3]
             })
-
+        
         #Borrowing a book route
         @self.app.route("/borrow_book", methods=['POST'])
         def borrow_book():
@@ -207,14 +214,14 @@ class LibraryApp:
 
             cursor = self.mysql.connection.cursor()
             cursor.execute("""INSERT INTO borrowed_books (user_id, book_id, borrow_date, return_date, status)
-                              VALUES (%s, %s, %s, %s, 'pending')""",
-                           (user_id, book_id, borrow_date, return_date))
+                            VALUES (%s, %s, %s, %s, 'pending')""",
+                        (user_id, book_id, borrow_date, return_date))
             cursor.execute("UPDATE books SET status = 'borrowed' WHERE Id = %s", (book_id,))
             self.mysql.connection.commit()
             cursor.close()
 
-            flash('Book borrowed successfully! Approval required.')
-            return redirect(url_for('approval.html'))
+            flash('Book borrowed successfully!')
+            return redirect(url_for('approval'))
 
         #Approval for borrowing a book route
         @self.app.route('/approval')
@@ -231,7 +238,6 @@ class LibraryApp:
 
             cursor = self.mysql.connection.cursor()
             try:
-                #Fetch user information
                 cursor.execute("SELECT Name FROM users WHERE Id = %s", (user_id,))
                 user = cursor.fetchone()
 
@@ -239,7 +245,6 @@ class LibraryApp:
                     flash('User not found.')
                     return redirect(url_for('login'))
 
-                #Fetch borrowed books for the user
                 cursor.execute("""SELECT b.id, b.ISBN, b.Title, bb.borrow_date, bb.return_date 
                   FROM borrowed_books bb
                   JOIN books b ON bb.book_id = b.id
@@ -258,37 +263,39 @@ class LibraryApp:
         def delete_book(book_id):
             user_id = session.get('id')
             if not user_id:
-                flash('Please log in first.')
                 return redirect(url_for('login'))
 
             with self.mysql.connection.cursor() as cursor:
                 cursor.execute("""DELETE FROM borrowed_books 
-                                  WHERE book_id = %s AND user_id = %s""", (book_id, user_id))
-                cursor.execute("UPDATE books SET status = 'available' WHERE Id = %s", (book_id,))
-                self.mysql.connection.commit()
+                                WHERE user_id = %s AND book_id = %s""", (user_id, book_id))
+                
+                if cursor.rowcount > 0:
+                    pass
+                
+            self.mysql.connection.commit()
 
-            flash('Book deleted successfully!')
-            return redirect(url_for('borrow'))
+            return redirect(url_for('borrowed_books'))
 
         #User log out route
         @self.app.route("/logout")
         def logout():
             session.clear()
-            flash('Successfully logged out.')
-            return redirect(url_for('index'))
+            flash('You have been successfully logged out. Please log in again to continue.')
+            return redirect(url_for('login'))
 
         #Admin login route
         @self.app.route('/admin_login', methods=['GET', 'POST'])
         def admin_login():
             if request.method == 'POST':
-                Email = request.form['Email']
-                Password = request.form['Password']
+                email = request.form['Email']
+                password = request.form['Password']
 
-                if Email == 'admin@gmail.com' and Password == 'admin':
+                if email == 'admin@gmail.com' and password == 'admin':
                     session['admin_login'] = True
+                    flash('Successfully logged in as admin.', 'success')
                     return redirect(url_for('admin_dashboard'))
                 else:
-                    flash('Incorrect email or password. Please check your credentials')
+                    flash('Incorrect email or password. Please check your credentials.', 'error')
 
             return render_template('admin_login.html')
 
@@ -309,17 +316,18 @@ class LibraryApp:
             users = cursor.fetchall()
 
             cursor.execute("""SELECT books.id, books.ISBN, books.Title, 
-                      COUNT(DISTINCT borrowed_books.user_id) AS borrower_count
-                      FROM books
-                      LEFT JOIN borrowed_books ON books.id = borrowed_books.book_id
-                      GROUP BY books.id""")
+                            COUNT(DISTINCT borrowed_books.user_id) AS borrower_count
+                            FROM books
+                            LEFT JOIN borrowed_books ON books.id = borrowed_books.book_id
+                            GROUP BY books.id""")
             books_with_borrowers = cursor.fetchall()
 
-            cursor.execute("""SELECT users.Id, users.Name, books.ISBN books.Title AS book_name, borrowed_books.borrow_date, borrowed_books.return_date, borrowed_books.status
-                              FROM borrowed_books
-                              JOIN users ON borrowed_books.user_id = users.Id
-                              JOIN books ON borrowed_books.book_id = books.id
-                              ORDER BY borrowed_books.borrow_date DESC""")
+            cursor.execute("""SELECT users.Id, users.Name, books.Title AS book_name, 
+                            borrowed_books.borrow_date, borrowed_books.return_date, borrowed_books.status
+                            FROM borrowed_books
+                            JOIN users ON borrowed_books.user_id = users.Id
+                            JOIN books ON borrowed_books.book_id = books.id
+                            ORDER BY borrowed_books.borrow_date DESC""")
             borrowed_books = cursor.fetchall()
             cursor.close()
 
@@ -346,7 +354,7 @@ class LibraryApp:
             requests = cursor.fetchall()
 
             if request.method == 'POST':
-                request_id = request.form['request_id']  #Get the unique request ID from the form
+                request_id = request.form['request_id']
                 action = request.form['action']
 
                 if action == 'approve':
@@ -370,8 +378,8 @@ class LibraryApp:
             self.mysql.connection.commit()
             cursor.close()
 
-            flash('User borrowing request approved!')
-            return redirect(url_for('admin_dashboard'))
+            show_message = True
+            return redirect(url_for('admin_dashboard', show_message=show_message))
 
         #View all borrowed books route
         @self.app.route("/borrowed_books")
@@ -383,11 +391,12 @@ class LibraryApp:
 
             cursor = self.mysql.connection.cursor()
             cursor.execute("""SELECT u.Id AS user_id, u.Name AS user_name, b.Title AS book_name, 
-                              bb.borrow_date, bb.return_date, bb.status
-                              FROM borrowed_books bb
-                              JOIN users u ON bb.user_id = u.Id
-                              JOIN books b ON bb.book_id = b.id
-                              ORDER BY bb.borrow_date DESC;""")
+                            bb.borrow_date, bb.return_date, bb.status
+                            FROM borrowed_books bb
+                            JOIN users u ON bb.user_id = u.Id
+                            JOIN books b ON bb.book_id = b.id
+                            WHERE bb.user_id = %s
+                            ORDER BY bb.borrow_date DESC;""", (user_id,))
             borrowed_books = cursor.fetchall()
             cursor.close()
 

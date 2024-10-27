@@ -5,15 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Profile</title>
     <style>
-
         body {
             height: 89vh;
-            width: 98.8.1vw;
+            width: 98.8vw;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: Arial, sans-serif;
-            background-image:url('/static/img/lib\ bg.jpg');
+            background-image: url('/static/img/lib/bg.jpg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -35,7 +34,7 @@
             color: white;
             margin-bottom: 20px;
             text-align: center;
-            font-weight:bold;
+            font-weight: bold;
         }
 
         label {
@@ -50,7 +49,7 @@
             color: white;
             cursor: pointer;
         }
-        
+
         button:hover {
             background-color: #DD6F00;
             color: #fff;
@@ -62,14 +61,14 @@
         select {
             width: 100%;
             padding: 10px;
-            margin-bottom:10px;
+            margin-bottom: 10px;
             border: 1px solid #080707;
             border-radius: 4px;
             box-sizing: border-box;
         }
 
         input[type="submit"] {
-            background-color: #e04f1a;;
+            background-color: #e04f1a;
             color: #fff;
             border-radius: 10px;
             box-sizing: border-box;
@@ -83,12 +82,36 @@
 
         input[type="submit"]:hover {
             background-color: white;
-            color: #FF4500;;
+            color: #FF4500;
             transform: scale(1.1);
         }
 
+        .flashes {
+            margin-bottom: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
 
-       
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
     </style>
 </head>
 <body>
@@ -96,13 +119,13 @@
         <form action="/update_profile" method="post">
             <a href="profile"><button style="font-size: 16px; border: 1px solid white;">&#8592; back</button></a>
             <h1>Your Profile</h1>
-    
+
             <label for="name">Name:</label>
             <input type="text" name="name" id="name" value="{{ user.name }}" required>
-    
+
             <label for="course">Course:</label>
             <input type="text" name="course" id="course" value="{{ user.course }}" required>
-    
+
             <label for="year">Year:</label>
             <select name="year" id="year" required>
                 <option value="">--SELECT--</option>
@@ -111,26 +134,25 @@
                 <option value="Third Year" {% if user.year == "Third Year" %}selected{% endif %}>3rd Year</option>
                 <option value="Fourth Year" {% if user.year == "Fourth Year" %}selected{% endif %}>4th Year</option>
             </select>
-    
+
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" value="{{ user.email }}" required>
 
             <label for="password">Password:</label>
-            <input type="password" name="password" id="password" value="{{ user.password }}" required>
-    
+            <input type="password" name="password" id="password" placeholder="Leave blank to keep current password">
+
             <input type="submit" value="Update Profile">
         </form>
-        <div class="button">
-        </div>
-    
-        {% with messages = get_flashed_messages() %}
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
                 <ul class="flashes">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
+                    {% for category, message in messages %}
+                        <li class="alert alert-{{ category }}">{{ message }}</li>
                     {% endfor %}
                 </ul>
             {% endif %}
         {% endwith %}
     </div>
-    
+</body>
+</html>

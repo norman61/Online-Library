@@ -75,6 +75,32 @@
             margin-bottom: 20px;
         }
 
+        .message-area ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .message-area li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .message-area .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .message-area .danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .message-area .warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
         .available-books {
             background: rgba(0, 0, 0, 0.5);
             padding: 20px;
@@ -192,7 +218,6 @@
                         <th>ID</th>
                         <th>ISBN</th>
                         <th>Title</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -203,7 +228,6 @@
                                 <td>{{ book[0] }}</td>
                                 <td>{{ book[1] }}</td>
                                 <td>{{ book[2] }}</td>
-                                <td>{{ book[3] }}</td>
                                 <td>
                                     <form action="{{ url_for('borrow_book') }}" method="post">
                                         <input type="hidden" name="book_id" value="{{ book[0] }}">
