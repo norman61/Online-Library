@@ -92,22 +92,19 @@
                 <th>Title</th>
                 <th>Borrow Date</th>
                 <th>Return Date</th>
-                <th>Actions</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             {% if borrowed_books %}
                 {% for book in borrowed_books %}
                 <tr>
+                    <td>{{ book[0] }}</td>
                     <td>{{ book[1] }}</td>
                     <td>{{ book[2] }}</td>
                     <td>{{ book[3] }}</td>
-                    <td>{{ book[4] }}</td>
                     <td>
                         <div class="action-buttons">
-                            <form action="{{ url_for('update_book', book_id=book[0]) }}" method="GET">
-                                <button type="submit">Update Book</button>
-                            </form>
                             <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?');">
                                 <button type="submit">Delete Book</button>
                             </form>

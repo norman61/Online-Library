@@ -138,7 +138,7 @@ class LibraryApp:
                     'name': user[1],
                     'course': user[2],
                     'year': user[3],
-                    'email': user[4]
+                    'email': user[4],
                 }
                 return render_template('profile.html', user=user_data)
             else:
@@ -154,7 +154,7 @@ class LibraryApp:
                 return redirect(url_for('login'))
 
             with self.mysql.connection.cursor() as cursor:
-                cursor.execute("SELECT Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
+                cursor.execute("SELECT Name, Course, Year, Email, Password FROM users WHERE Id = %s", (user_id,))
                 user = cursor.fetchone()
 
                 if not user:
@@ -166,7 +166,8 @@ class LibraryApp:
                     course = request.form['course']
                     year = request.form['year']
                     email = request.form['email']
-                    print(f"Debug: Name: {name}, Course: {course}, Year: {year}, Email: {email}")
+                    password = request.form['password']
+                    print(f"Debug: Name: {name}, Course: {course}, Year: {year}, Email: {email}, Password: {password}")
 
                     if not all([name, course, year, email]):
                         flash('All fields are required.')
@@ -174,9 +175,9 @@ class LibraryApp:
 
                     try:
                         cursor.execute("""UPDATE users 
-                                        SET Name = %s, Course = %s, Year = %s, Email = %s 
+                                        SET Name = %s, Course = %s, Year = %s, Email = %s, Password = %s
                                         WHERE Id = %s""",
-                                    (name, course, year, email, user_id))
+                                    (name, course, year, email, password, user_id))
                         self.mysql.connection.commit()
                         flash('Profile updated successfully.')
                         return redirect(url_for('profile'))
@@ -188,7 +189,8 @@ class LibraryApp:
                 'name': user[0],
                 'course': user[1],
                 'year': user[2],
-                'email': user[3]
+                'email': user[3],
+                'password': user[4],
             })
 
         #Borrowing a book route
@@ -212,7 +214,12 @@ class LibraryApp:
             cursor.close()
 
             flash('Book borrowed successfully! Approval required.')
-            return redirect(url_for('home'))
+            return redirect(url_for('approval.html'))
+
+        #Approval for borrowing a book route
+        @self.app.route('/approval')
+        def approval():
+            return render_template('approval.html')
 
         #View borrowed books route
         @self.app.route("/borrow")
@@ -245,11 +252,6 @@ class LibraryApp:
                 cursor.close()
 
             return render_template("borrow.html", user=user, borrowed_books=borrowed_books)
-
-        #Approval for borrowing a book route
-        @self.app.route('/approval')
-        def approval():
-            return render_template('approval.html')
 
         #Deleting a borrowed book route
         @self.app.route("/delete/<int:book_id>", methods=["POST"])
@@ -313,7 +315,7 @@ class LibraryApp:
                       GROUP BY books.id""")
             books_with_borrowers = cursor.fetchall()
 
-            cursor.execute("""SELECT users.Id, users.Name, books.Title AS book_name, borrowed_books.borrow_date, borrowed_books.return_date, borrowed_books.status
+            cursor.execute("""SELECT users.Id, users.Name, books.ISBN books.Title AS book_name, borrowed_books.borrow_date, borrowed_books.return_date, borrowed_books.status
                               FROM borrowed_books
                               JOIN users ON borrowed_books.user_id = users.Id
                               JOIN books ON borrowed_books.book_id = books.id
