@@ -154,7 +154,7 @@ class LibraryApp:
                 return redirect(url_for('login'))
 
             with self.mysql.connection.cursor() as cursor:
-                cursor.execute("SELECT Name, Course, Year, Email FROM users WHERE Id = %s", (user_id,))
+                cursor.execute("SELECT Name, Course, Year, Email, Password FROM users WHERE Id = %s", (user_id,))
                 user = cursor.fetchone()
 
                 if not user:
@@ -170,16 +170,17 @@ class LibraryApp:
 
                     print(f"Debug: Name: {name}, Course: {course}, Year: {year}, Email: {email}, Password: {password}")
 
-                    if not all([name, course, year, email]):
+                    if not all([name, course, year, email, password]):
                         flash('All fields are required.')
                         return redirect(url_for('update_profile'))
 
                     try:
                         if password:
+                            hashed_password = generate_password_hash(password)
                             cursor.execute("""UPDATE users 
                                             SET Name = %s, Course = %s, Year = %s, Email = %s, Password = %s 
                                             WHERE Id = %s""",
-                                        (name, course, year, email, password, user_id))
+                                        (name, course, year, email, hashed_password, user_id))
                         else:
                             cursor.execute("""UPDATE users 
                                             SET Name = %s, Course = %s, Year = %s, Email = %s 
@@ -197,7 +198,8 @@ class LibraryApp:
                 'name': user[0],
                 'course': user[1],
                 'year': user[2],
-                'email': user[3]
+                'email': user[3],
+                'password': user[4]
             })
         
         #Borrowing a book route
@@ -400,7 +402,7 @@ class LibraryApp:
             borrowed_books = cursor.fetchall()
             cursor.close()
 
-            return render_template('borrowed_books.html', borrowed_books=borrowed_books)
+            return render_template('borrow.html', borrowed_books=borrowed_books)
 
         #Admin logout route
         @self.app.route('/admin_logout')
